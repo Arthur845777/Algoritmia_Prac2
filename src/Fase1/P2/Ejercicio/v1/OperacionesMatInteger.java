@@ -1,6 +1,6 @@
-package Fase1.P2.Ejercicio;
+package Fase1.P2.Ejercicio.v1;
 
-public class OperacionesMatInteger implements Operable<Integer>{
+public class OperacionesMatInteger implements Operable<Integer> {
     @Override
     public Integer suma(Integer a, Integer b) {
         return a + b;

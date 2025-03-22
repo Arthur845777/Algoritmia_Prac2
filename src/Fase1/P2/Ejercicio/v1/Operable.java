@@ -1,4 +1,4 @@
-package Fase1.P2.Ejercicio;
+package Fase1.P2.Ejercicio.v1;
 
 //public interface Operable <E> {
 //    E suma(E obje);
