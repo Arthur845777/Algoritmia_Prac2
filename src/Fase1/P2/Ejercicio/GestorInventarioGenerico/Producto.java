@@ -1,4 +1,4 @@
-package GIG;
+package Fase1.P2.Ejercicio.GestorInventarioGenerico;
 
 class Producto<T extends Number> {
     private String nombre;
