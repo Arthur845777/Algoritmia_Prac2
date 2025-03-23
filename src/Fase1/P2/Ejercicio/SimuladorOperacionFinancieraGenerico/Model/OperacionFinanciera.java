@@ -1,11 +1,14 @@
-package Fase1.P2.Ejercicio.SimuladorOperacionFinancieraGenerico;
+package Fase1.P2.Ejercicio.SimuladorOperacionFinancieraGenerico.Model;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class OperacionFinanciera <T extends Number> {
     private T monto;
     private T tasaInteres;
     private int plazo;
 
-    public OperacionFinanciera() {}
+    public OperacionFinanciera() {super();}
     public OperacionFinanciera(T monto, T tasaInteres, int plazo) {
         this.monto = monto;
         this.tasaInteres = tasaInteres;
@@ -22,13 +25,4 @@ public class OperacionFinanciera <T extends Number> {
         return plazo;
     }
 
-    public void setMonto(T monto) {
-        this.monto = monto;
-    }
-    public void setTasaInteres(T tasaInteres) {
-        this.tasaInteres = tasaInteres;
-    }
-    public void setPlazo(int plazo) {
-        this.plazo = plazo;
-    }
 }
