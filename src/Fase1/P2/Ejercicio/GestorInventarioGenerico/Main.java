@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        Operador<Double> operador = new Operador<>();
+        GestorProductos gp = new GestorProductos();
 
         while (true) {
             System.out.println("\nMenú de GestorInventarioGenerico:");
@@ -18,45 +18,28 @@ public class Main {
             System.out.println("7. Salir del Programa.");
             System.out.print("Seleccione una opción: ");
             
-            int opcion = scanner.nextInt();
-            scanner.nextLine();
+            String opcion = scanner.nextLine();
 
             switch (opcion) {
-                case 1:
-                    System.out.print("Nombre del producto: ");
-                    String nombre = scanner.nextLine();
-                    System.out.print("Precio del producto: ");
-                    double precio = scanner.nextDouble();
-                    System.out.print("Cantidad del producto: ");
-                    int cantidad = scanner.nextInt();
-                    operador.agregarProducto(new Producto<>(nombre, precio, cantidad));
+                case "1":
+                    gp.agregarProducto();
                     break;
-                case 2:
-                    System.out.println("Valor total del inventario: " + operador.calcularValorTotal());
+                case "2":
+                	gp.calcularValorTotalInventario();
+                	break;
+                case "3":
+                    gp.aplicarDescuento();
                     break;
-                case 3:
-                    System.out.print("Nombre del producto a descontar: ");
-                    String prodDesc = scanner.nextLine();
-                    System.out.print("Porcentaje de descuento (%): ");
-                    double descuento = scanner.nextDouble();
-                    operador.aplicarDescuento(prodDesc, descuento);
+                case "4":
+                    gp.incrementarExistencias();;
                     break;
-                case 4:
-                    System.out.print("Nombre del producto: ");
-                    String prodInc = scanner.nextLine();
-                    System.out.print("Cantidad a incrementar: ");
-                    int incremento = scanner.nextInt();
-                    operador.incrementarExistencias(prodInc, incremento);
+                case "5":
+                    gp.productoMasBarato();
+                	break;
+                case "6":
+                    gp.productoMasBarato();
                     break;
-                case 5:
-                    Producto<Double> caro = operador.productoMasCaro();
-                    System.out.println("Producto más caro: " + (caro != null ? caro.getNombre() : "No hay productos"));
-                    break;
-                case 6:
-                    Producto<Double> barato = operador.productoMasBarato();
-                    System.out.println("Producto más barato: " + (barato != null ? barato.getNombre() : "No hay productos"));
-                    break;
-                case 7:
+                case "7":
                     System.out.println("Saliendo...");
                     scanner.close();
                     return;

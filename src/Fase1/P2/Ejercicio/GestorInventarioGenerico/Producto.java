@@ -11,6 +11,7 @@ class Producto<T extends Number> {
         this.cantidad = cantidad;
     }
 
+    //getters y setters
     public String getNombre() { return nombre; }
     public T getPrecio() { return precio; }
     public int getCantidad() { return cantidad; }
