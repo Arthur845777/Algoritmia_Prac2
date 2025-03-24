@@ -1,5 +1,4 @@
 package Fase1.P2.Ejercicio.SimuladorOperacionFinancieraGenerico.Controlator;
-
 import Fase1.P2.Ejercicio.SimuladorOperacionFinancieraGenerico.Model.MonedaCambio;
 import Fase1.P2.Ejercicio.SimuladorOperacionFinancieraGenerico.Model.OperacionFinanciera;
 import Fase1.P2.Ejercicio.SimuladorOperacionFinancieraGenerico.Model.Operador;
@@ -90,7 +89,4 @@ public class AccionesMain {
             }
         }
     }
-
-
-
 }

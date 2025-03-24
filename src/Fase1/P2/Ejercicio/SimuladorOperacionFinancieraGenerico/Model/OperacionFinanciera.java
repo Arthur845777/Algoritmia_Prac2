@@ -1,8 +1,5 @@
 package Fase1.P2.Ejercicio.SimuladorOperacionFinancieraGenerico.Model;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
 public class OperacionFinanciera <T extends Number> {
     private T monto;
     private T tasaInteres;
@@ -24,5 +21,4 @@ public class OperacionFinanciera <T extends Number> {
     public int getPlazo() {
         return plazo;
     }
-
 }

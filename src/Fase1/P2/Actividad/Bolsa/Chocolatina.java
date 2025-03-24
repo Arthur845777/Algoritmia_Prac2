@@ -1,4 +1,4 @@
-package Fase1.P2.Actividad;
+package Fase1.P2.Actividad.Bolsa;
 
 public class Chocolatina {
     private String marca;

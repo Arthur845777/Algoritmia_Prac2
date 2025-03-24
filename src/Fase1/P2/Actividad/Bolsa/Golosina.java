@@ -1,4 +1,4 @@
-package Fase1.P2.Actividad;
+package Fase1.P2.Actividad.Bolsa;
 
 public class Golosina {
     private String nombre;

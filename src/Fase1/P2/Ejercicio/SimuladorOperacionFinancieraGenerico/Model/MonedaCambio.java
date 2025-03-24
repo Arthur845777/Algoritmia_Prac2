@@ -15,6 +15,5 @@ public class MonedaCambio {
         if (origen.equalsIgnoreCase("dolares") && destino.equalsIgnoreCase("euros")) return 1.08;
         return 1;
     }
-
 }
 

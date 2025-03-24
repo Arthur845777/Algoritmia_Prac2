@@ -1,4 +1,4 @@
-package Fase1.P2.Actividad;
+package Fase1.P2.Actividad.Bolsa;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,7 @@ public class Principal {
 
         List<Bolsa> listaBolsas = new ArrayList<>();
 
-        Bolsa < Chocolatina > bolsaCho = new Bolsa < Chocolatina > ();
+        Bolsa <Chocolatina> bolsaCho = new Bolsa < Chocolatina > ();
         Bolsa <Golosina> bolsaGolo = new Bolsa<Golosina>();
 
         listaBolsas.add(bolsaCho.add(new Chocolatina("milka")));
@@ -19,19 +19,12 @@ public class Principal {
         listaBolsas.add(bolsaGolo.add(new Golosina("soda",2.3)));
 
 
-//        for (Chocolatina chocolatina: bolsaCho) {
-//            System.out.println(chocolatina.getMarca());
-//        }
-//
-//        for (Golosina golo: bolsaGolo) {
-//            System.out.println(golo);
-//        }
-
-        for (Bolsa bolsa: listaBolsas) {
-            System.out.println(bolsa);
-            // tarea para la casa, que esto funcione
+        for (Chocolatina chocolatina: bolsaCho) {
+            System.out.println(chocolatina.getMarca());
         }
 
+        for (Golosina golo: bolsaGolo) {
+            System.out.println(golo);
+        }
     }
 }
-

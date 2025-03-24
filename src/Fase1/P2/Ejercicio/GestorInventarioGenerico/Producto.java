@@ -18,6 +18,3 @@ class Producto<T extends Number> {
     public void setPrecio(T precio) { this.precio = precio; }
     public void setCantidad(int cantidad) { this.cantidad = cantidad; }
 }
-
-
-
