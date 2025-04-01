@@ -1,5 +1,7 @@
 package Fase1.P3.Ordenamiento;
 
+import java.util.Arrays;
+
 public class MergeSort {
     public static int[] mergeSort(int[] arr) {
         if (arr.length == 1) {
@@ -10,7 +12,6 @@ public class MergeSort {
         int[] leftArray = new int[middle];
         int[] rightArray = new int[arr.length - middle];
 
-        // Copiar elementos a los arrays izquierdo y derecho
         for (int i = 0; i < middle; i++) {
             leftArray[i] = arr[i];
         }
@@ -28,7 +29,6 @@ public class MergeSort {
         int[] result = new int[leftArray.length + rightArray.length];
         int leftIndex = 0, rightIndex = 0, resultIndex = 0;
 
-        // Combinar los dos arrays ordenados
         while (leftIndex < leftArray.length && rightIndex < rightArray.length) {
             if (leftArray[leftIndex] <= rightArray[rightIndex]) {
                 result[resultIndex++] = leftArray[leftIndex++];
@@ -37,16 +37,39 @@ public class MergeSort {
             }
         }
 
-        // Copiar elementos restantes del array izquierdo, si hay alguno
         while (leftIndex < leftArray.length) {
             result[resultIndex++] = leftArray[leftIndex++];
         }
 
-        // Copiar elementos restantes del array derecho, si hay alguno
         while (rightIndex < rightArray.length) {
             result[resultIndex++] = rightArray[rightIndex++];
         }
 
         return result;
     }
+
+    public static void main(String[] args) {
+        int size = 100000;
+        int[] arr = new int[size];
+
+        for (int i = 0; i < size; i++) {
+            arr[i] = (int) (Math.random() * size);
+        }
+
+//        for(Object item : arr){
+//            System.out.println(item);
+//        }
+
+        System.out.println("Ordenando array de " + size + " elementos...");
+        long startTime = System.currentTimeMillis();
+
+        mergeSort(arr);
+
+        long endTime = System.currentTimeMillis();
+        System.out.println("Tiempo de ejecución: " + (endTime - startTime) + " ms");
+
+        System.out.println("Primeros 5 elementos: " + Arrays.toString(Arrays.copyOfRange(arr, 0, Math.min(5, arr.length))));
+        System.out.println("Últimos 5 elementos: " + Arrays.toString(Arrays.copyOfRange(arr, Math.max(0, arr.length - 5), arr.length)));
+    }
+
 }
