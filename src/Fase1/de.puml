@@ -1,0 +1,26 @@
+@startuml
+class plan_cuentas {
+    + _id : ObjectId
+    + codigo : String
+    + nombre_cuenta : String
+    + tipo : String <<enum>> ("Activo", "Pasivo", "Patrimonio", "Ingreso", "Egreso")
+}
+
+class libro_diario {
+    + _id : ObjectId
+    + fecha : Date
+    + descripcion : String
+    + referencia : String
+}
+
+class detalles_movimiento {
+    + _id : ObjectId
+    + id_operacion : ObjectId
+    + id_cuenta : ObjectId
+    + debe : Decimal(10,2)
+    + haber : Decimal(10,2)
+}
+
+plan_cuentas "1" <-- "N" detalles_movimiento : Relaciona
+libro_diario "1" <-- "N" detalles_movimiento : Incluye movimientos
+@enduml
