@@ -3,44 +3,20 @@ import java.util.ArrayList;
 
 public class Busqueda {
 
-    public void di(ArrayList<Integer> listita, int pedi) {        
+    public void di(ArrayList<Integer> listita, int pedi) {
         // Caso base: si solo hay un elemento, ese es el resultado
         if (listita.size() == 1) {
             System.out.println(listita.get(0));
             return;
         }
 
-        if (pedi == 1) {
-            // Devolver el elemento más pequeño
-            int min = listita.get(0);
-            for (int i : listita) {
-                if (i < min) {
-                    min = i;
-                }
-            }
-            System.out.println(min);
-            return;
-        }
-        
-        if (pedi == listita.size()) {
-            // Devolver el elemento más grande
-            int max = listita.get(0);
-            for (int i : listita) {
-                if (i > max) {
-                    max = i;
-                }
-            }
-            System.out.println(max);
-            return;
-        }
-    
         // Determinar el pivote
         int pivoteIndex = listita.size() / 2;
         int pivote = listita.get(pivoteIndex);
-        
+
         ArrayList<Integer> listitaM = new ArrayList<>(); // Elementos mayores o iguales al pivote
         ArrayList<Integer> listitaN = new ArrayList<>(); // Elementos menores al pivote
-    
+
         // Dividir la lista en dos partes
         for (int i : listita) {
             if (i < pivote) {
@@ -56,7 +32,13 @@ public class Busqueda {
                 }
             }
         }
-        
+
+        if(pedi==1){
+            pedi=0;
+        }else if(pedi==listita.size()){
+            pedi-=1;
+        }
+
         // Ahora decidimos en qué dirección ir
         if (pedi < listitaN.size()) {
             // El elemento está en la parte menor
