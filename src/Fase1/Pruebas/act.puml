@@ -1,0 +1,26 @@
+@startuml
+entity AsientosContables {
+    * id_asiento : INT <<PK, AUTO_INCREMENT>>
+    * numero_correlativo : VARCHAR(10)
+    * fecha_operacion : DATE
+    * glosa : VARCHAR(255)
+}
+
+entity CuentasContables {
+    * id_cuenta : INT <<PK, AUTO_INCREMENT>>
+    * codigo : VARCHAR(10) <<UNIQUE>>
+    * denominacion : VARCHAR(255)
+}
+
+entity Movimientos {
+    * id_movimiento : INT <<PK, AUTO_INCREMENT>>
+    * id_asiento : INT <<FK>>
+    * id_cuenta : INT <<FK>>
+    * debe : DECIMAL(10,2)
+    * haber : DECIMAL(10,2)
+}
+
+AsientosContables ||--o{ Movimientos : contiene
+CuentasContables ||--o{ Movimientos : se_refiere
+@enduml
+
