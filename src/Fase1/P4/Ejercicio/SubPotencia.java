@@ -1,4 +1,4 @@
-package Fase1.P4.Actividad.Ejercicio;
+package Fase1.P4.Ejercicio;
 
 public class SubPotencia {
 
