@@ -48,11 +48,10 @@ public class ViajeRio {
     }
 
     public static void main(String[] args) {
-        // Ejemplo con 4 embarcaderos
+        // n embarcaderos
         int n = 5;
         int[][] T = new int[n][n];
 
-        // Inicializamos con un valor muy alto (representando infinito)
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 T[i][j] = 0;
@@ -78,44 +77,12 @@ public class ViajeRio {
         System.out.println("Matriz de costos mínimos C[i,j]:");
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                if (C[i][j] >= 100) {
-                    continue;
-                } else {
+                if (!(C[i][j] >= 100)) {
                     System.out.print(C[i][j] + "\t");
                 }
             }
             System.out.println();
         }
 
-        System.out.println("\nCosto mínimo para ir del embarcadero 0 al 3: " + C[0][3]);
-        System.out.print("\nRuta óptima: ");
-        imprimirRuta(0, 3, T, C);
-
     }
-
-    public static void imprimirRuta(int i, int j, int[][] T, int[][] C) {
-        System.out.print(i);
-
-        if (i == j) {
-            return;
-        }
-
-        // Si la ruta directa es la óptima
-        if (C[i][j] == T[i][j]) {
-            System.out.print(" → " + j);
-            return;
-        }
-
-        // Buscamos el embarcadero intermedio que nos da el costo mínimo
-        for (int k = i + 1; k < j; k++) {
-            if (C[i][j] == calcularCosteMinimo(i, k, T, C) + calcularCosteMinimo(k, j, T, C)) {
-                System.out.print(" → ");
-                imprimirRuta(i, k, T, C);
-                System.out.print(" → ");
-                imprimirRuta(k, j, T, C);
-                return;
-            }
-        }
-    }
-
 }
