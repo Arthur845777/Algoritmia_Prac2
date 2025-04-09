@@ -50,7 +50,7 @@ public class Busqueda {
         } else {
             // El elemento está en la parte mayor
             // Ajustamos pedi: restamos los elementos de la parte menor y el pivote
-            pedi = pedi - listitaN.size() - 1;
+            pedi = pedi - listitaN.size() - 1; //
             di(listitaM, pedi);
         }
     }
