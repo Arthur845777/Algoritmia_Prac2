@@ -66,7 +66,7 @@ public class Main {
 
 //        TaskManager<Tarea> gestorTareas2 = new TaskManager<>();
 //        gestorTareas2.AddTask(tarea2);
-        // 9 Probanod las nuevas funcionalidades
+////         9 Probanod las nuevas funcionalidades
 //        gestorTareas.concatenarLinkedList(gestorTareas.getNodo(), gestorTareas2.getNodo());
     }
 }
