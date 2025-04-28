@@ -17,6 +17,7 @@ public class Ejercicio<T extends Comparable<T>> {
     public boolean findItem(ArrayList<T> taskComplete, T task) {
         return taskComplete.contains(task);
     }
+
     public ArrayList reverseList(ArrayList<T> taskComplete){
         ArrayList<T> auxTask = new ArrayList<>();
         for (int i = taskComplete.size(); i > 0; i--) {

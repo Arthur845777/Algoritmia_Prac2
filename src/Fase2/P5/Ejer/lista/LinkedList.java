@@ -47,11 +47,12 @@ public class LinkedList<T extends Comparable<T>> {
     }
 
     public void remove(Nodo<T> node) {
-        if (isEmphy()) {
+        if (isEmphy()) { // Asumo que isEmphy() verifica si la lista está vacía
             return;
         }
+
         Nodo<T> current = head;
-        
+
         while (current != null) {
             if (current.dato.compareTo(node.dato) == 0) {
                 if (current == head) {
@@ -61,11 +62,15 @@ public class LinkedList<T extends Comparable<T>> {
                     } else {
                         tail = null;
                     }
-                } 
+                }
                 else if (current == tail) {
                     tail = current.before;
-                    tail.next = null;
-                } 
+                    if (tail != null) {
+                        tail.next = null;
+                    } else {
+                        head = null;
+                    }
+                }
                 else {
                     current.before.next = current.next;
                     current.next.before = current.before;

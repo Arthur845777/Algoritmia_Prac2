@@ -49,26 +49,31 @@ class LinkedList<T extends Comparable<T>> {
         if (head == null) {
             return false;
         }
+        if (head.dato.equals(valor)) {
+            head = head.next;
+            return true;
+        }
 
         Nodo<T> nodoCurrent = head;
-        while (nodoCurrent.next != null && !nodoCurrent.dato.equals(valor)) {
+
+        while (nodoCurrent.next != null) {
             if (nodoCurrent.next.dato.equals(valor)) {
                 nodoCurrent.next = nodoCurrent.next.next;
                 return true;
             }
             nodoCurrent = nodoCurrent.next;
         }
+
         return false;
     }
 
-    public void insertFirst(T nodo) {
-        Nodo<T> newNode = new Nodo<T>(nodo);
+    public void insertFirst(T valor) {
+        Nodo<T> newNode = new Nodo<T>(valor);
         if (head == null) {
             head = newNode;
         } else {
-            Nodo<T> nodoAux = head;
+            newNode.next = head;
             head = newNode;
-            head.next = nodoAux;
         }
     }
 
@@ -85,10 +90,10 @@ class LinkedList<T extends Comparable<T>> {
         }
     }
 
-    public void insertionSort(T dato) {
+    public void sortLinkedList(T dato) {
         Nodo<T> newNode = new Nodo<>(dato);
 
-        if (head == null || dato.compareTo(head.dato) < 0) {
+        if (head == null || newNode.dato.compareTo(head.dato) < 0) {
             insertFirst(dato);
         } else {
             Nodo<T> nodoCurrent = head;
@@ -100,7 +105,7 @@ class LinkedList<T extends Comparable<T>> {
         }
     }
 
-    public void sortList() {
+    public void insertionSort() {
         if (head == null || head.next == null) {
             return;
         }
@@ -111,7 +116,7 @@ class LinkedList<T extends Comparable<T>> {
         while (nodoCurrent != null) {
             Nodo<T> next = nodoCurrent.next;
 
-            sortedList.insertionSort(nodoCurrent.dato);
+            sortedList.sortLinkedList(nodoCurrent.dato);
 
             nodoCurrent = next;
         }
@@ -131,22 +136,6 @@ class LinkedList<T extends Comparable<T>> {
             }
             return count;
         }
-    }
-
-    public T maxPriorityTask(){
-        if (head == null) {
-            return null;
-        }
-        Nodo<T> nodoCurrent = head;
-        T maxElement = head.dato;
-
-        while (nodoCurrent != null) {
-            if(nodoCurrent.dato.compareTo(maxElement) > 0) {
-                maxElement = nodoCurrent.dato;
-            }
-            nodoCurrent = nodoCurrent.next;
-        }
-        return maxElement;
     }
 
     public void reverseLinkedList() {
@@ -169,18 +158,7 @@ class LinkedList<T extends Comparable<T>> {
         head = prevNode;
     }
 
-    public void printNode(){
-        if (head == null) {
-            System.out.println("Lista Vacia");
-            return;
-        } else {
-            Nodo<T> nodoCurrent = head;
-            do {
-                System.out.print(nodoCurrent.dato + "\n");
-                nodoCurrent = nodoCurrent.next;
-            }while (nodoCurrent != null);
-        }
-    }
+
 
     public Nodo<T> getNodoCurrent() {
         return head;

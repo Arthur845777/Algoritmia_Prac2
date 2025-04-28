@@ -3,11 +3,11 @@ package Fase2.P5.Act.TareaSanti;
 import java.util.ArrayList;
 
 public class TaskManager<T extends Comparable<T>> {
-    private ArrayList<T> taskComplete;
+    private LinkedList<T> taskComplete;
     private LinkedList<T> taskInProgress;
 
     public TaskManager() {
-        taskComplete = new ArrayList();
+        taskComplete = new LinkedList();
         taskInProgress = new LinkedList();
     }
 
@@ -27,7 +27,7 @@ public class TaskManager<T extends Comparable<T>> {
     }
 
     public void PrintTaskInProgress(){
-        taskInProgress.printNode();
+        printNode(getNodo());
     }
 
     public int CountTaskInProgress(){
@@ -35,7 +35,7 @@ public class TaskManager<T extends Comparable<T>> {
     }
 
     public T MaxElement(){
-        return taskInProgress.maxPriorityTask();
+        return maxPriorityTask(getNodo());
     }
 
     public void ReverseLinkedList(){
@@ -45,18 +45,47 @@ public class TaskManager<T extends Comparable<T>> {
     public void completeTask(T task) {
         System.out.println("Tarea 'Completar informe' marcada como completada");
         if (RemoveTask(task)) {
-            taskComplete.add(task);
+            taskComplete.sortLinkedList(task);
+        } else {
+            System.out.println("Tarea 'Completar informe' marcada como no existente");
         }
     }
 
-    public void PrintCompletedTasks() {
-        for (T task : taskComplete) {
-            System.out.println(task);
-        }
+    public void PrintCompletedTasks(){
+        printNode(getNodo());
     }
 
     public Nodo<T> getNodo() {
         return taskInProgress.getNodoCurrent();
+    }
+
+    public T maxPriorityTask(Nodo<T> head){
+        if (head == null) {
+            return null;
+        }
+        Nodo<T> nodoCurrent = head;
+        T maxElement = head.dato;
+
+        while (nodoCurrent != null) {
+            if(nodoCurrent.dato.compareTo(maxElement) > 0) {
+                maxElement = nodoCurrent.dato;
+            }
+            nodoCurrent = nodoCurrent.next;
+        }
+        return maxElement;
+    }
+
+    public void printNode(Nodo<T> head){
+        if (head == null) {
+            System.out.println("Lista Vacia");
+            return;
+        } else {
+            Nodo<T> nodoCurrent = head;
+            do {
+                System.out.print(nodoCurrent.dato + "\n");
+                nodoCurrent = nodoCurrent.next;
+            }while (nodoCurrent != null);
+        }
     }
 
 }
