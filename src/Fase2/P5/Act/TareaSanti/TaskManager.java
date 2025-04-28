@@ -38,7 +38,7 @@ public class TaskManager<T extends Comparable<T>> {
         return taskInProgress.maxPriorityTask();
     }
 
-    public void ReverseList(){
+    public void ReverseLinkedList(){
         taskInProgress.reverseLinkedList();
     }
 
@@ -54,6 +54,11 @@ public class TaskManager<T extends Comparable<T>> {
             System.out.println(task);
         }
     }
+
+    public Nodo<T> getNodo() {
+        return taskInProgress.getNodoCurrent();
+    }
+
 }
 
 

@@ -46,7 +46,7 @@ public class Main {
 
         // Paso 6: Invertir la lista
         System.out.println("\n6. Invirtiendo la lista de tareas...");
-        gestorTareas.ReverseList();
+        gestorTareas.ReverseLinkedList();
         System.out.println("Tareas después de invertir:");
         gestorTareas.PrintTaskInProgress();
 
@@ -64,5 +64,9 @@ public class Main {
         System.out.println("\nTareas completadas:");
         gestorTareas.PrintCompletedTasks();
 
+//        TaskManager<Tarea> gestorTareas2 = new TaskManager<>();
+//        gestorTareas2.AddTask(tarea2);
+        // 9 Probanod las nuevas funcionalidades
+//        gestorTareas.concatenarLinkedList(gestorTareas.getNodo(), gestorTareas2.getNodo());
     }
 }

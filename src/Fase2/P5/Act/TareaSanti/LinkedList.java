@@ -119,25 +119,12 @@ class LinkedList<T extends Comparable<T>> {
         this.head = sortedList.head;
     }
 
-    public void printNode(){
-        if (head == null) {
-            System.out.println("Lista Vacia");
-            return;
-        } else {
-            Nodo<T> nodoCurrent = head;
-            do {
-                System.out.print(nodoCurrent.dato + "\n");
-                nodoCurrent = nodoCurrent.next;
-            }while (nodoCurrent != null);
-        }
-    }
-
     public int countNode(){
         if (head == null) {
             return 0;
         } else {
             Nodo<T> nodoCurrent = head;
-            int count = 0;
+            int count = 1;
             while (nodoCurrent.next != null){
                 nodoCurrent = nodoCurrent.next;
                 count++;
@@ -180,6 +167,23 @@ class LinkedList<T extends Comparable<T>> {
             currentNode = nextNode;
         }
         head = prevNode;
+    }
+
+    public void printNode(){
+        if (head == null) {
+            System.out.println("Lista Vacia");
+            return;
+        } else {
+            Nodo<T> nodoCurrent = head;
+            do {
+                System.out.print(nodoCurrent.dato + "\n");
+                nodoCurrent = nodoCurrent.next;
+            }while (nodoCurrent != null);
+        }
+    }
+
+    public Nodo<T> getNodoCurrent() {
+        return head;
     }
 
 }
