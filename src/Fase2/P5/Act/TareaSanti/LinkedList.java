@@ -41,7 +41,6 @@ class LinkedList<T extends Comparable<T>> {
             nodoCurrent = nodoCurrent.next;
             cont++;
         }
-
         return -1;
     }
 
@@ -157,8 +156,6 @@ class LinkedList<T extends Comparable<T>> {
         }
         head = prevNode;
     }
-
-
 
     public Nodo<T> getNodoCurrent() {
         return head;

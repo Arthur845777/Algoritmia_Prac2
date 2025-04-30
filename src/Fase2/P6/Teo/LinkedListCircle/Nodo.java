@@ -1,20 +1,25 @@
-package Fase2.P5;
+package Fase2.P6.Teo.LinkedListCircle;
 
 class Nodo<E> {
-    E dato;
-    Nodo<E> next;
+    private E dato;
+    private Nodo<E> next;
 
     public Nodo(E dato) {
         this.dato = dato;
         this.next = null;
     }
+
     public Nodo(E dato, Nodo<E> next) {
         this.dato = dato;
-        this.next = null;
+        this.next = next;
     }
 
     public E getDato() {
         return dato;
+    }
+
+    public void setDato(E dato) {
+        this.dato = dato;
     }
 
     public Nodo<E> getNext() {
@@ -23,13 +28,5 @@ class Nodo<E> {
 
     public void setNext(Nodo<E> next) {
         this.next = next;
-    }
-
-    @Override
-    public String toString() {
-        return "Nodo{" +
-                "dato=" + dato +
-                ", next=" + next +
-                '}';
     }
 }
