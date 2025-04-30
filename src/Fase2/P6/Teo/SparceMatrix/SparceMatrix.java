@@ -83,7 +83,7 @@ class SparceMatrix<E> {
         newNode.setDown(currCol);
     }
 
-    public E get(int row, int col) {
+    public E getValueMatrix(int row, int col) {
         if (row < 0 || row >= dim[0] || col < 0 || col >= dim[1]) {
             throw new IndexOutOfBoundsException("Fuera de los límites de la matriz");
         }
@@ -163,7 +163,7 @@ class SparceMatrix<E> {
         for (int i = 0; i < dim[0]; i++) {
             sb.append("[ ");
             for (int j = 0; j < dim[1]; j++) {
-                E value = get(i, j);
+                E value = getValueMatrix(i, j);
                 if (value == null) {
                     sb.append("0 ");
                 } else {
@@ -206,17 +206,17 @@ class Main{
         System.out.println(matrix);
 
         // Obtener un valor existente
-        int valor = matrix.get(2, 2);
+        int valor = matrix.getValueMatrix(2, 2);
         System.out.println("Valor en posición (2,2): " + valor);
 
         // Intentar obtener un valor que no existe (debe ser null -> se muestra 0)
-        Integer valorNulo = matrix.get(3, 3);
+        Integer valorNulo = matrix.getValueMatrix(3, 3);
         System.out.println("Valor en posición (3,3): " + (valorNulo == null ? "null/0" : valorNulo));
 
         // Modificar un valor existente
         System.out.println("Modificando el valor en (2,2) de 7 a 15...");
         matrix.set(2, 2, 15);
-        System.out.println("Nuevo valor en (2,2): " + matrix.get(2, 2));
+        System.out.println("Nuevo valor en (2,2): " + matrix.getValueMatrix(2, 2));
 
         // Eliminar un valor
         System.out.println("Eliminando el valor en posición (0,4)...");
