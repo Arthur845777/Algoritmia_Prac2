@@ -1,22 +1,22 @@
 package Fase2.P6.Teo.Pila.PLinkedList;
 
 public class StackList <E> { // QueueLink nuevo nombre :v
-    private Nodo<E> head;
+    private Nodo<E> first;
     private Nodo<E> tail;
 
     public StackList() {
-        head = null;
+        first = null;
         tail = null;
     }
 
     public boolean isEmpty() {
-        return head == null;
+        return first == null;
     }
 
     public void enqueue(E x){
         Nodo<E> newNode = new Nodo<>(x);
         if(isEmpty()){
-            head = newNode;
+            first = newNode;
         } else {
             tail.next = newNode;
         }
@@ -28,9 +28,9 @@ public class StackList <E> { // QueueLink nuevo nombre :v
         if(isEmpty()){
             return null;
         }
-        E ele = head.dato;
-        head = head.next;
-        if(head == null){
+        E ele = first.dato;
+        first = first.next;
+        if(first == null){
             tail = null;
         }
         return ele;

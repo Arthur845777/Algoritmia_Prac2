@@ -14,6 +14,7 @@ public class StackArray <E> {
             stack[++top] = item;
         }
     }
+
     public E pop() throws ExceptionIsEmpty {
         if(isEmpy()) {
             throw new ExceptionIsEmpty();
