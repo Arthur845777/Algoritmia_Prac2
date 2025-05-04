@@ -1,6 +1,6 @@
-package Queue;
-import Node.Node;
-import ExceptionIsEmpty.ExceptionIsEmpty;
+package Fase2.P6.Ejer.Ejercicio1_3.Queue;
+import Fase2.P6.Ejer.Ejercicio1_3.Node.Node;
+import Fase2.P6.Ejer.Ejercicio1_3.ExceptionIsEmpty.ExceptionIsEmpty;
 
 public class QueueLink<E> implements Queue<E>{
 	private Node<E> front;

@@ -1,5 +1,5 @@
-package PriorityQueue;
-import ExceptionIsEmpty.ExceptionIsEmpty;
+package Fase2.P6.Ejer.Ejercicio1_3.PriorityQueue;
+import Fase2.P6.Ejer.Ejercicio1_3.ExceptionIsEmpty.ExceptionIsEmpty;
 
 public interface PriorityQueue<E, N> {
 	void enqueue(E x, N pr);

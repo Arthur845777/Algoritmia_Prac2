@@ -1,7 +1,7 @@
-package Test;
+package Fase2.P6.Ejer.Ejercicio1_3.Test;
 
-import PriorityQueue.PriorityQueueLinked;
-import ExceptionIsEmpty.ExceptionIsEmpty;
+import Fase2.P6.Ejer.Ejercicio1_3.PriorityQueue.PriorityQueueLinked;
+import Fase2.P6.Ejer.Ejercicio1_3.ExceptionIsEmpty.ExceptionIsEmpty;
 
 public class TestPriorityQueueLinked {
     public static void main(String[] args) {

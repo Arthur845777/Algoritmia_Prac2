@@ -1,7 +1,7 @@
-package Test;
+package Fase2.P6.Ejer.Ejercicio1_3.Test;
 
-import Stack.ExceptionIsEmpty;
-import Stack.StackArray;
+import Fase2.P6.Ejer.Ejercicio1_3.ExceptionIsEmpty.ExceptionIsEmpty;
+import Fase2.P6.Ejer.Ejercicio1_3.Stack.StackArray;
 
 public class TestStackArray {
 	public static void main(String[] args) throws ExceptionIsEmpty {

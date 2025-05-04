@@ -1,4 +1,4 @@
-package Node;
+package Fase2.P6.Ejer.Ejercicio1_3.Node;
 
 public class Node<E> {
     private E data;

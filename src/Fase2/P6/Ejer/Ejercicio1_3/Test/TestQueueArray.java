@@ -1,7 +1,7 @@
-package Test;
+package Fase2.P6.Ejer.Ejercicio1_3.Test;
 
-import Queue.QueueArray;
-import ExceptionIsEmpty.ExceptionIsEmpty;
+import Fase2.P6.Ejer.Ejercicio1_3.Queue.QueueArray;
+import Fase2.P6.Ejer.Ejercicio1_3.ExceptionIsEmpty.ExceptionIsEmpty;
 
 public class TestQueueArray {
     public static void main(String[] args) {

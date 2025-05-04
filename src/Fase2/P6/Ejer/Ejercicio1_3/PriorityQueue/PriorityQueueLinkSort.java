@@ -1,7 +1,7 @@
-package PriorityQueue;
+package Fase2.P6.Ejer.Ejercicio1_3.PriorityQueue;
 
-import Node.Node;
-import ExceptionIsEmpty.ExceptionIsEmpty;
+import Fase2.P6.Ejer.Ejercicio1_3.Node.Node;
+import Fase2.P6.Ejer.Ejercicio1_3.ExceptionIsEmpty.ExceptionIsEmpty;
 
 public class PriorityQueueLinkSort<E, N extends Comparable<N>> implements PriorityQueue<E, N> {
     class EntryNode {

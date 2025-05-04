@@ -1,7 +1,7 @@
-package PriorityQueue;
+package Fase2.P6.Ejer.Ejercicio1_3.PriorityQueue;
 
-import Queue.QueueLink;
-import ExceptionIsEmpty.ExceptionIsEmpty;
+import Fase2.P6.Ejer.Ejercicio1_3.Queue.QueueLink;
+import Fase2.P6.Ejer.Ejercicio1_3.ExceptionIsEmpty.ExceptionIsEmpty;
 
 public class PriorityQueueLinked<E, N extends Number> implements PriorityQueue<E, N> {
 

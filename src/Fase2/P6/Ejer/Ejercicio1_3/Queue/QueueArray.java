@@ -1,5 +1,5 @@
-package Queue;
-import ExceptionIsEmpty.ExceptionIsEmpty;
+package Fase2.P6.Ejer.Ejercicio1_3.Queue;
+import Fase2.P6.Ejer.Ejercicio1_3.ExceptionIsEmpty.ExceptionIsEmpty;
 
 public class QueueArray<E> implements Queue<E> {
     private E[] array;

@@ -1,7 +1,7 @@
-package Test;
+package Fase2.P6.Ejer.Ejercicio1_3.Test;
 
-import Stack.StackLink;
-import ExceptionIsEmpty.ExceptionIsEmpty;
+import Fase2.P6.Ejer.Ejercicio1_3.Stack.StackLink;
+import Fase2.P6.Ejer.Ejercicio1_3.ExceptionIsEmpty.ExceptionIsEmpty;
 
 public class TestStackLink {
     public static void main(String[] args) {

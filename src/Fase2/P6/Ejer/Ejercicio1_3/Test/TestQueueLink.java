@@ -1,7 +1,7 @@
-package Test;
+package Fase2.P6.Ejer.Ejercicio1_3.Test;
 
-import Queue.ExceptionIsEmpty;
-import Queue.QueueLink;
+import Fase2.P6.Ejer.Ejercicio1_3.ExceptionIsEmpty.ExceptionIsEmpty;
+import Fase2.P6.Ejer.Ejercicio1_3.Queue.QueueLink;
 
 public class TestQueueLink {
 	public static void main(String[] args) throws ExceptionIsEmpty {
