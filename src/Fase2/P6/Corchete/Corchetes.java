@@ -1,11 +1,12 @@
 package Fase2.P6.Corchete;
 import Fase2.P6.ExceptionIsEmpty.ExceptionIsEmpty;
+import Fase2.P6.Stack.LinkedStack;
 
 public class Corchetes {
 
     public static boolean symbolBalancing(String S) {
         // Crear una pila utilizando nuestra implementación de StackLink
-        StackLink<Character> stack = new StackLink<>();
+        LinkedStack<Character> stack = new LinkedStack<>();
 
         // Recorrer cada caracter de la cadena
         for (int i = 0; i < S.length(); i++) {
@@ -21,9 +22,7 @@ public class Corchetes {
                     char top = stack.pop();
 
                     // Verificar si coinciden los corchetes de apertura y cierre
-                    if ((current == ')' && top != '(') ||
-                        (current == ']' && top != '[') ||
-                        (current == '}' && top != '{')) {
+                    if ((current == ')' && top != '(') || (current == ']' && top != '[') || (current == '}' && top != '{')) {
                         return false;
                     }
                 } catch (ExceptionIsEmpty e) {
@@ -34,7 +33,6 @@ public class Corchetes {
         return stack.isEmpty();
     }
 
-    // Ejemplo de uso
     public static void main(String[] args) {
         String[] examples = {"()()()[()]()","((()))[]]","([])[](","([{)]}", "[","[][][]{{{}}}"};
 

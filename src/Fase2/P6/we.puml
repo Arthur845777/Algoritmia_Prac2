@@ -1,0 +1,201 @@
+@startuml
+' ===== Packages =====
+package "Security & Users" {
+    abstract class Person {
+        - id: Long
+        - fullName: String
+        - documentId: String
+        - birthDate: Date
+        - email: String
+        - phoneNumber: String
+        - passwordHash: String
+        - createdAt: DateTime
+        - updatedAt: DateTime
+        + login(): boolean
+        + resetPassword(): void
+    }
+
+    class Client extends Person {
+        - loyaltyPoints: int
+        + register(): void
+    }
+    class Employee extends Person {
+        - employeeNumber: String
+        - hiredDate: DateTime
+    }
+    class Administrator extends Employee {}
+    class Cashier extends Employee {}
+    class Guard extends Employee {}
+}
+
+package "Events & Tickets" {
+    class Event {
+        - id: Long
+        - name: String
+        - description: String
+        - date: DateTime
+        - venue: String
+        - totalSeats: int
+        - priceGeneral: BigDecimal
+        - priceVIP: BigDecimal
+        + listTickets(): List<Ticket>
+    }
+
+    class Ticket {
+        - id: Long
+        - seatNumber: String
+        - type: TicketType
+        - status: TicketStatus
+        - price: BigDecimal
+        + generateQRCode(): QRCode
+    }
+
+    enum TicketType {
+                GENERAL
+                VIP
+    }
+
+    enum TicketStatus {
+                AVAILABLE
+                RESERVED
+                SOLD
+                USED
+    }
+
+    class QRCode {
+        - code: String
+        - createdAt: DateTime
+        + encrypt(data: String): String
+        + validate(): boolean
+    }
+
+    interface IQrService {
+        + create(ticket: Ticket): QRCode
+        + scan(code: String): QRCode
+    }
+    class QrService implements IQrService {
+        + create(ticket: Ticket): QRCode
+        + scan(code: String): QRCode
+    }
+}
+
+package "Orders & Payments" {
+    interface IPaymentProcessor {
+        + process(order: Order): PaymentResult
+    }
+
+    class PaymentResult {
+        - success: boolean
+        - message: String
+        - transactionId: String
+    }
+
+    class Order {
+        - id: Long
+        - client: Client
+        - tickets: List<Ticket>
+        - orderDate: DateTime
+        - status: OrderStatus
+        + place(): void
+        + cancel(): void
+    }
+    enum OrderStatus {
+                    NEW
+                    CONFIRMED
+                    CANCELLED
+                    COMPLETED
+    }
+
+    class Payment {
+        - id: Long
+        - order: Order
+        - amount: BigDecimal
+        - date: DateTime
+        - method: PaymentMethod
+        - status: PaymentStatus
+        + execute(processor: IPaymentProcessor): PaymentResult
+    }
+
+    enum PaymentMethod {
+                        CREDIT_CARD
+                        DEBIT_CARD, DIGITAL_WALLET
+    }
+    enum PaymentStatus {
+                        PENDING
+                        COMPLETED
+                        FAILED
+    }
+}
+
+package "Point of Sale" {
+    class Product {
+        - id: Long
+        - name: String
+        - description: String
+        - unitPrice: BigDecimal
+        - stock: int
+        + adjustStock(qty: int): void
+    }
+
+    class SaleItem {
+        - id: Long
+        - product: Product
+        - quantity: int
+        - price: BigDecimal
+    }
+
+    class Sale {
+        - id: Long
+        - cashier: Cashier
+        - items: List<SaleItem>
+        - payment: Payment
+        - total: BigDecimal
+        - saleDate: DateTime
+        + addItem(item: SaleItem): void
+        + removeItem(item: SaleItem): void
+        + finalize(): void
+    }
+}
+
+package "Reporting" {
+    class Report {
+        - id: Long
+        - type: ReportType
+        - filters: ReportFilter
+        - generatedAt: DateTime
+        + generate(): File
+    }
+    enum ReportType {
+                    SALES
+                    CLIENTS
+                    FINANCIAL
+                    INVENTORY
+                    EVENTS
+    }
+
+    class ReportFilter {
+        - dateFrom: DateTime
+        - dateTo: DateTime
+        - eventId: Long
+    }
+}
+
+' ===== Relationships =====
+Client "1" -- "*" Order : places
+Order "*" -- "*" Ticket : contains
+Order "1" -- "1" Payment : has
+Event "1" -- "*" Ticket : offers
+Ticket "*" o-- "1" QRCode : generates
+Sale "1" -- "*" SaleItem : includes
+SaleItem "*" -- "1" Product : refers to
+Sale "1" -- "1" Payment : paid by
+Report "*" .. "1" ReportFilter : uses
+Payment ..|> IPaymentProcessor : implements
+'QrService ..|> IQrService : implements
+'Person <|-- Client
+'Person <|-- Employee
+'Employee <|-- Cashier
+'Employee <|-- Guard
+'Employee <|-- Administrator
+
+@enduml

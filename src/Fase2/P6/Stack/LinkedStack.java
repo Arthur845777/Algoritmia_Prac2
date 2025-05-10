@@ -23,6 +23,7 @@ public class LinkedStack<E> implements Stack<E> {
 		}
 		E aux = stack.getData();
 		stack = stack.getNext();
+		counter--;
 		return aux;
 	}
 

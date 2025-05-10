@@ -10,6 +10,7 @@ public class LinkedQueue<E> implements Queue<E> {
         first = null;
         last = null;
     }
+
     public void enqueue(E e) {
         Node<E> newNode = new Node<>(e);
         if(isEmpty()){

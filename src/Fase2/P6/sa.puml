@@ -1,0 +1,138 @@
+@startuml
+title Sistema de Información para Compra y Venta en Discoteca
+
+|Cliente|
+|Sistema de Información|
+|Guardia de Seguridad|
+|Cajero|
+|Administrador|
+
+partition "Proceso de Compra de Entradas" {
+    |Cliente|
+    start
+    :Ingresar al Sistema\n(Web/App);
+    :Iniciar Registro;
+    :Proporcionar Datos\n(Nombre, DNI, F. Nacimiento, Email, Teléfono);
+
+    |Sistema de Información|
+    :Recibir Datos de Registro;
+    :Validar Edad Mínima\n(Basado en F. Nacimiento);
+    if (¿Cumple Edad Mínima?) then ([Sí])
+        |Cliente|
+        :Seleccionar Tipo de Entrada\n(General, VIP, etc.);
+        :Elegir Método de Pago\n(Tarjeta, Billetera Digital);
+        :Realizar Pago;
+
+        |Sistema de Información|
+        :Procesar Transacción de Pago;
+        if (¿Pago Exitoso?) then ([Sí])
+            :Generar Entrada Digital\ncon Código QR Único;
+            :Enviar Entrada a Cliente\n(Email / App);
+            :Almacenar Datos de Compra;
+                |Cliente|
+                :Recibir Entrada Digital;
+                note right: Fin Flujo Compra Exitosa
+                stop
+        else ([No])
+            :Informar Error de Pago;
+                |Cliente|
+                :Recibir Notificación\nError de Pago;
+                stop
+        endif
+    else ([No])
+      :Informar al Cliente\n(No cumple edad);
+        |Cliente|
+        :Recibir Notificación\n(Edad no permitida);
+        stop
+    endif
+}
+
+partition "Proceso de Control de Acceso" {
+    |Cliente|
+    start
+    :Llegar a la Entrada;
+    :Presentar Entrada Digital (QR)\ny Documento de Identidad (DNI);
+
+    |Guardia de Seguridad|
+    :Recibir Entrada y DNI;
+    :Utilizar Escáner QR\n(Conectado al Sistema);
+
+    |Sistema de Información|
+    :Recibir lectura QR;
+    :Validar Autenticidad\ndel Código QR;
+    :Consultar Datos de Compra\nAsociados al QR;
+
+    |Guardia de Seguridad|
+    :Verificar Datos del Sistema\nvs DNI presentado;
+    :Verificar Edad en DNI;
+    if (¿QR Válido?\n Y \n¿Datos Coinciden?\n Y \n¿Mayor de Edad?) then ([Sí])
+        |Sistema de Información|
+        :Registrar Ingreso del Cliente;
+
+        |Guardia de Seguridad|
+        :Permitir Acceso al Cliente;
+            |Cliente|
+            :Ingresar a la Discoteca;
+            note right: Fin Flujo Acceso Exitoso
+            stop
+    else ([No])
+        |Sistema de Información|
+        :Registrar Intento Fallido\n(Opcional: Notificar Alerta);
+
+        |Guardia de Seguridad|
+        :Denegar Acceso;
+            |Cliente|
+            :Recibir Negación de Acceso;
+            stop
+    endif
+}
+
+partition "Proceso de Venta Interna" {
+    |Cliente|
+    start
+    :Solicitar Producto\n(Bebida, Cigarrillos, etc.);
+
+    |Cajero|
+    :Recibir Pedido;
+    :Registrar Venta en Sistema\n(Producto, Cantidad, Precio, Total);
+    :Seleccionar Método de Pago\n(Indicado por Cliente);
+
+    |Cliente|
+    :Realizar Pago;
+
+    |Cajero|
+    :Confirmar Pago en Sistema;
+    ' Se puede agregar un punto de decisión para cancelaciones/modificaciones si es necesario
+    ' if (¿Modificar/Cancelar?) then (...) else (...) endif
+
+    |Sistema de Información|
+    :Almacenar Detalles\nde la Transacción;
+    :Generar Comprobante\n(Digital o Impreso);
+
+    |Cajero|
+    :Entregar Producto;
+    :Entregar Comprobante\n(Si aplica);
+
+    |Cliente|
+    :Recibir Producto y Comprobante;
+    stop
+}
+
+partition "Funciones del Administrador" {
+    |Administrador|
+    start
+    :Acceder al Sistema\n(Login Seguro);
+
+    fork
+        :Gestionar Productos\n(Agregar, Modificar, Eliminar);
+    fork again
+        :Visualizar y Generar Reportes\n(Ventas, Inventario, Flujo Clientes, etc.);
+    fork again
+        :Configurar Parámetros\ndel Sistema (Tipos Entrada, etc.);
+    end fork
+
+    :Utilizar Información para\nToma de Decisiones Estratégicas;
+    stop
+}
+
+@enduml

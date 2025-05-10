@@ -77,7 +77,7 @@ public class PriorityQueueLinkSort<E, N extends Comparable<N>> implements Priori
             throw new ExceptionIsEmpty();
         }
 
-        E item = first.getData().data;
+        E item = first.getData().getData();
         first = first.getNext();
 
         if (first == null) {
