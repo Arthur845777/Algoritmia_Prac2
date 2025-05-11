@@ -75,7 +75,6 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E>{
 	}
 	
 	public Node<E> deleteRec(E data, Node<E> current) throws ItemNotFound {
-		Node<E> result = current;
 		if(current == null) {
 			throw new ItemNotFound("Item not found");
 		}

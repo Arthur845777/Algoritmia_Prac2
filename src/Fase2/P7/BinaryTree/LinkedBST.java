@@ -150,6 +150,50 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
         }
     }
 
+    private Node<E> eliminar(Node<E> current, E valor) throws ExceptionIsEmpty {
+        if (current == null) {
+            throw new ExceptionIsEmpty("El arbol esta vacio");
+        }
+
+        int resultCompare = valor.compareTo(current.getData());
+
+        if (resultCompare < 0) {
+            current.setLeft(eliminar(current.getLeft(), valor));
+        }
+
+        else if (resultCompare > 0) {
+            current.setRight(eliminar(current.getRight(), valor));
+        }
+
+        else {
+            if (current.getLeft() == null && current.getRight() == null) {
+                return null;
+            }
+
+            else if (current.getLeft() == null) {
+                return current.getRight();
+            }
+
+            else if (current.getRight() == null) {
+                return current.getLeft();
+            }
+            else {
+                Node<E> minNode = findMin(current.getRight());
+                current.setData(minNode.getData());
+                current.setRight(eliminar(current.getRight(), minNode.getData()));
+            }
+        }
+
+        return current;
+    }
+
+    public Node<E> findMin(Node<E> node){
+        while(node.getLeft() != null) {
+            node = node.getLeft();
+        }
+        return node;
+    }
+
     private Node<E> findMin(Node<E> parent, Node<E> node) {
         if (node == null) {
             return null;
@@ -159,6 +203,13 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
             return node;
         }
         return findMin(node,node.getLeft());
+    }
+
+    public Node<E> findMax(Node<E> node){
+        while(node.getRight() != null) {
+            node = node.getRight();
+        }
+        return node;
     }
 
     private Node<E> findMax(Node<E> parent, Node<E> node) {
@@ -172,6 +223,38 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
         return findMax(node, node.getRight());
     }
 
+    //Recorridos
+    // INORDER
+    public String inOrder() {
+        return inOrderRec(this.root).trim();
+    }
+
+    private String inOrderRec(Node<E> current) {
+        if (current == null) return "";
+        return inOrderRec(current.left) + current.data + " " + inOrderRec(current.right);
+    }
+
+    // PREORDER
+    public String preOrder() {
+        return preOrderRec(this.root).trim();
+    }
+
+    private String preOrderRec(Node<E> current) {
+        if (current == null) return "";
+        return current.data + " " + preOrderRec(current.left) + preOrderRec(current.right);
+    }
+
+    // POSTORDER
+    public String postOrder() {
+        return postOrderRec(this.root).trim();
+    }
+
+    private String postOrderRec(Node<E> current) {
+        if (current == null) return "";
+        return postOrderRec(current.left) + postOrderRec(current.right) + current.data + " ";
+    }
+
+// toString
 //    @Override
 //    public String toString() {
 //        return toString(root, 0);
