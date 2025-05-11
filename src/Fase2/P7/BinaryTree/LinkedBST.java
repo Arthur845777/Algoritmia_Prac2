@@ -5,17 +5,13 @@ import Fase2.P7.Exceptions.ExceptionIsEmpty;
 import Fase2.P7.Exceptions.ItemDuplicated;
 import Fase2.P7.Exceptions.ItemNotFound;
 import Fase2.P7.Node.Node;
+import Fase2.P7.Queue.LinkedQueue;
 
 public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
     private Node<E> root;
 
     public LinkedBST() {
         root = null;
-    }
-
-    public void destroyNodes() throws ExceptionIsEmpty {
-        if (isEmpty()) throw new ExceptionIsEmpty("BST is already empty");
-        destroy();
     }
 
     public void destroy() {
@@ -104,7 +100,7 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
         }
 
         boolean found = deleteBinary(null, root, currentNode); // null como padre inicial, no hay dirección
-
+        root = eliminar(root, currentNode);
 //        if (!found) {
 //            throw new ItemNoFound("El elemento no se encuentra en el árbol");
 //        }
@@ -231,7 +227,7 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
 
     private String inOrderRec(Node<E> current) {
         if (current == null) return "";
-        return inOrderRec(current.left) + current.data + " " + inOrderRec(current.right);
+        return inOrderRec(current.getLeft()) + current.getData() + " " + inOrderRec(current.getRight());
     }
 
     // PREORDER
@@ -241,7 +237,7 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
 
     private String preOrderRec(Node<E> current) {
         if (current == null) return "";
-        return current.data + " " + preOrderRec(current.left) + preOrderRec(current.right);
+        return current.getData() + " " + preOrderRec(current.getLeft()) + preOrderRec(current.getRight());
     }
 
     // POSTORDER
@@ -251,8 +247,125 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
 
     private String postOrderRec(Node<E> current) {
         if (current == null) return "";
-        return postOrderRec(current.left) + postOrderRec(current.right) + current.data + " ";
+        return postOrderRec(current.getLeft()) + postOrderRec(current.getRight()) + current.getData() + " ";
     }
+
+//    ------------------
+public void RecorridoInOrder(){
+    inOrder(root);
+}
+
+    public void RecorridoPreOrder(){
+        preOrder(root);
+    }
+
+    public void RecorridoPostorder(){
+        postOrder(root);
+    }
+
+    private void inOrder(Node<E> nodo) {
+        if (nodo != null) {
+            inOrder(nodo.getLeft());
+            System.out.print(nodo.getData() + " ");
+            inOrder(nodo.getRight());
+        }
+    }
+
+    private void preOrder(Node<E> nodo) {
+        if (nodo != null) {
+            System.out.print(nodo.getData() + " ");
+            preOrder(nodo.getLeft());
+            preOrder(nodo.getRight());
+        }
+    }
+
+    private void postOrder(Node<E> nodo) {
+        if (nodo != null) {
+            postOrder(nodo.getLeft());
+            postOrder(nodo.getRight());
+            System.out.print(nodo.getData() + " ");
+        }
+    }
+
+//   ejercicio 1  ------------------------------
+//    a
+    public void destroyNodes() throws ExceptionIsEmpty{
+        if (root == null) {
+            throw new ExceptionIsEmpty("El árbol ya estaba vacío");
+        }
+        root = null;
+    }
+//    b
+// Cuenta todos los nodos del árbol (hojas y no hojas)
+    public int countAllNodes() {
+        return countAllNodesRecursive(root);
+    }
+
+    private int countAllNodesRecursive(Node<E> nodo) {
+        if (nodo == null) {
+            return 0;
+        }
+        return 1 + countAllNodesRecursive(nodo.getLeft()) + countAllNodesRecursive(nodo.getRight());
+    }
+//    c
+    // Cuenta solo los nodos internos (con al menos un hijo)
+    public int countInternalNodes() {
+        return countInternalNodesRecursive(root);
+    }
+
+    private int countInternalNodesRecursive(Node<E> nodo) {
+        if (nodo == null || (nodo.getLeft() == null && nodo.getRight() == null)) {
+            return 0;
+        }
+        return 1 + countInternalNodesRecursive(nodo.getLeft()) + countInternalNodesRecursive(nodo.getRight());
+    }
+//    d
+    public int height(E dato) {
+        // Si el árbol está vacío
+        if (root == null) {
+            return -1;
+        }
+
+        // Buscar el nodo desde el cual queremos calcular la altura
+        E nodoX = searchBinary(root, dato);
+
+        if (nodoX == null) {
+            return -1;
+        }
+
+        // Usamos BFS para calcular la altura
+        LinkedQueue<E> cola = new LinkedQueue<>();
+        cola.enqueue(nodoX); // Agregamos el nodo inicial
+
+        int altura = -1; // Inicializamos en -1 porque incrementamos al principio de cada nivel
+
+        try {
+            while (!cola.isEmpty()) {
+                altura++; // Incrementamos la altura al comenzar un nuevo nivel
+
+                // Procesamos todos los nodos en el nivel actual
+                int nodosEnNivel = cola.size(); // Usando el nuevo método size()
+
+                for (int i = 0; i < nodosEnNivel; i++) {
+                    E actual = cola.dequeue();
+
+                    // Agregamos los hijos a la cola para procesarlos en el siguiente nivel
+                    if (actual.left != null) {
+                        cola.enqueue(actual.left);
+                    }
+                    if (actual.right != null) {
+                        cola.enqueue(actual.right);
+                    }
+                }
+            }
+        } catch (ExceptionIsEmpty e) {
+            // Esto no debería ocurrir ya que verificamos isEmpty() antes
+            System.err.println("Error: " + e.getMessage());
+        }
+
+        return altura;
+    }
+
 
 // toString
 //    @Override
