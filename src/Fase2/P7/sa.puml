@@ -1,0 +1,43 @@
+'actor Usuario
+'participant PC
+'participant "Servidor de Impresión" as Servidor
+'participant "Cola de Impresión" as Cola
+'participant Impresora
+'
+'Usuario -> PC : enviarOrdenImpresion(archivo)
+'PC -> Servidor : procesarImpresion(archivo)
+'Servidor -> Impresora : imprimir(archivo)
+'Impresora -> Servidor : estadoOcupado()
+'
+'alt Impresora ocupada
+'    Servidor -> Cola : agregarACola(archivo)
+'    Cola --> Servidor : notificarArchivoPendiente()
+'    Servidor -> Impresora : imprimir(archivo)
+'else Impresora disponible
+'    Impresora --> Servidor : confirmacionImpresion()
+'end
+'
+'Servidor --> PC : notificarResultado()
+'PC --> Usuario : mostrarEstado()
+'
+
+
+@startuml
+actor Hombre
+participant "Cerebro" as Cerebro
+participant "Brazo" as Brazo
+participant "Mano" as Mano
+participant "Pelota" as Pelota
+
+Hombre -> Cerebro : percibirPelota()
+Cerebro -> Brazo : enviarOrdenFlexion()
+Brazo -> Brazo : mover()
+Brazo -> Mano : enviarOrdenJuntarDedos()
+Mano -> Mano : juntarDedos()
+
+Pelota -> Mano : serCogida()
+Mano --> Brazo : confirmacionPelotaCogida()
+Brazo --> Cerebro : señalExito()
+Cerebro --> Hombre : acciónCompleta()
+
+@enduml

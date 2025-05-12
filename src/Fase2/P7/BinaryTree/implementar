@@ -1,0 +1,33 @@
+162 - linkedBST
+
+//Recorridos
+    // INORDER
+    public String inOrder() {
+        return inOrderRec(this.root).trim();
+    }
+
+    private String inOrderRec(NodeTree<E> current) {
+        if (current == null) return "";
+        return inOrderRec(current.getLeft()) + current.getData() + " " + inOrderRec(current.getRight());
+    }
+
+    // PREORDER
+    public String preOrder() {
+        return preOrderRec(this.root).trim();
+    }
+
+    private String preOrderRec(NodeTree<E> current) {
+        if (current == null) return "";
+        return current.getData() + " " + preOrderRec(current.getLeft()) + preOrderRec(current.getRight());
+    }
+
+    // POSTORDER
+    public String postOrder() {
+        return postOrderRec(this.root).trim();
+    }
+
+    private String postOrderRec(NodeTree<E> current) {
+        if (current == null) return "";
+        return postOrderRec(current.getLeft()) + postOrderRec(current.getRight()) + current.getData() + " ";
+    }
+
