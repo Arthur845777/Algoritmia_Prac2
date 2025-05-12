@@ -1,25 +1,27 @@
 package Fase2.P7.Queue;
-
-import Fase2.P6.ExceptionIsEmpty.ExceptionIsEmpty;
-import Fase2.P6.Node.Node;
+import Fase2.P7.Node.NodeSimple;
+import Fase2.P7.Exceptions.ExceptionIsEmpty;
 
 public class LinkedQueue<E> implements Queue<E> {
-    private Node<E> first;
-    private Node<E> last;
+    private NodeSimple<E> first;
+    private NodeSimple<E> last;
+    private int size;
 
     public LinkedQueue() {
         first = null;
         last = null;
+        size = 0;
     }
 
     public void enqueue(E e) {
-        Node<E> newNode = new Node<>(e);
+        NodeSimple<E> newNode = new NodeSimple<>(e);
         if(isEmpty()){
             first = last = newNode;
         } else {
             last.setNext(newNode);
         }
         last = newNode;
+        size++;
     }
 
     public E dequeue() throws ExceptionIsEmpty {
@@ -28,6 +30,7 @@ public class LinkedQueue<E> implements Queue<E> {
         } else {
             E item = first.getData();
             first = first.getNext();
+            size--;
             return item;
         }
     }
@@ -50,6 +53,16 @@ public class LinkedQueue<E> implements Queue<E> {
 
     public boolean isEmpty() {
         return first == null;
+    }
+
+    public int size() {
+        return size;
+    }
+
+    public void clear() {
+        first = null;
+        last = null;
+        size = 0;
     }
 
     @Override

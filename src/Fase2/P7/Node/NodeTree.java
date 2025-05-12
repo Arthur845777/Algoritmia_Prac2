@@ -1,11 +1,11 @@
 package Fase2.P7.Node;
 
-public class Node<E> {
+public class NodeTree<E> {
     private E data;
-    private Node<E> right;
-	private Node<E> left;
+    private NodeTree<E> right;
+	private NodeTree<E> left;
 
-    public Node(E data) {
+    public NodeTree(E data) {
         this.data = data;
         this.right = null;
 		this.left = null;
@@ -18,17 +18,17 @@ public class Node<E> {
 		this.data = data;
 	}
 
-	public Node<E> getRight() {
+	public NodeTree<E> getRight() {
 		return right;
 	}
-	public void setRight(Node<E> next) {
+	public void setRight(NodeTree<E> next) {
 		this.right = next;
 	}
 
-	public Node<E> getLeft() {
+	public NodeTree<E> getLeft() {
 		return left;
 	}
-	public void setLeft(Node<E> next) {
+	public void setLeft(NodeTree<E> next) {
 		this.left = next;
 	}
 }

@@ -1,6 +1,5 @@
 package Fase2.P7.Queue;
-
-import Fase2.P6.ExceptionIsEmpty.ExceptionIsEmpty;
+import Fase2.P7.Exceptions.ExceptionIsEmpty;
 
 public class ArrayQueue<E> implements Queue<E> {
     private E[] array;

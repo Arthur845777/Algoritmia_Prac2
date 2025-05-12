@@ -4,11 +4,11 @@ import Fase2.P7.BSTreeInterface.BinarySearchTree;
 import Fase2.P7.Exceptions.ExceptionIsEmpty;
 import Fase2.P7.Exceptions.ItemDuplicated;
 import Fase2.P7.Exceptions.ItemNotFound;
-import Fase2.P7.Node.Node;
+import Fase2.P7.Node.NodeTree;
 import Fase2.P7.Queue.LinkedQueue;
 
 public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
-    private Node<E> root;
+    private NodeTree<E> root;
 
     public LinkedBST() {
         root = null;
@@ -28,9 +28,9 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
         root = insertBinary(root, x);
     }
 
-    private Node<E> insertBinary(Node<E> currentNode, E data) throws ItemDuplicated {
+    private NodeTree<E> insertBinary(NodeTree<E> currentNode, E data) throws ItemDuplicated {
         if(currentNode == null) {
-            return new Node<>(data);
+            return new NodeTree<>(data);
         }
 
         int compare = data.compareTo(currentNode.getData());
@@ -55,7 +55,7 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
         return result;
     }
 
-    private E searchBinary(Node<E> currentNode, E data) {
+    private E searchBinary(NodeTree<E> currentNode, E data) {
         if (currentNode == null) {
             return null;
         }
@@ -75,7 +75,7 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
         return containsRec(root, data);
     }
 
-    private boolean containsRec(Node<E> currentNode, E data) {
+    private boolean containsRec(NodeTree<E> currentNode, E data) {
         if (currentNode == null) {
             return false;
         }
@@ -106,7 +106,7 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
 //        }
     }
 
-    private boolean deleteBinary(Node<E> parent, Node<E> current, E data) {
+    private boolean deleteBinary(NodeTree<E> parent, NodeTree<E> current, E data) {
         if (current == null) {
             return false;
         }
@@ -137,7 +137,7 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
             }
 
             else { // root.getRight() != null && root.getLeft() != null
-                Node<E> auxNode = findMin(current, current.getRight());
+                NodeTree<E> auxNode = findMin(current, current.getRight());
                 auxNode.setRight(current.getRight());
                 parent.setRight(auxNode);
                 current = auxNode;
@@ -146,7 +146,7 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
         }
     }
 
-    private Node<E> eliminar(Node<E> current, E valor) throws ExceptionIsEmpty {
+    private NodeTree<E> eliminar(NodeTree<E> current, E valor) throws ExceptionIsEmpty {
         if (current == null) {
             throw new ExceptionIsEmpty("El arbol esta vacio");
         }
@@ -174,7 +174,7 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
                 return current.getLeft();
             }
             else {
-                Node<E> minNode = findMin(current.getRight());
+                NodeTree<E> minNode = findMin(current.getRight());
                 current.setData(minNode.getData());
                 current.setRight(eliminar(current.getRight(), minNode.getData()));
             }
@@ -183,14 +183,14 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
         return current;
     }
 
-    public Node<E> findMin(Node<E> node){
+    public NodeTree<E> findMin(NodeTree<E> node){
         while(node.getLeft() != null) {
             node = node.getLeft();
         }
         return node;
     }
 
-    private Node<E> findMin(Node<E> parent, Node<E> node) {
+    private NodeTree<E> findMin(NodeTree<E> parent, NodeTree<E> node) {
         if (node == null) {
             return null;
         }
@@ -201,14 +201,14 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
         return findMin(node,node.getLeft());
     }
 
-    public Node<E> findMax(Node<E> node){
+    public NodeTree<E> findMax(NodeTree<E> node){
         while(node.getRight() != null) {
             node = node.getRight();
         }
         return node;
     }
 
-    private Node<E> findMax(Node<E> parent, Node<E> node) {
+    private NodeTree<E> findMax(NodeTree<E> parent, NodeTree<E> node) {
         if (node == null) {
             return null;
         }
@@ -225,7 +225,7 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
         return inOrderRec(this.root).trim();
     }
 
-    private String inOrderRec(Node<E> current) {
+    private String inOrderRec(NodeTree<E> current) {
         if (current == null) return "";
         return inOrderRec(current.getLeft()) + current.getData() + " " + inOrderRec(current.getRight());
     }
@@ -235,7 +235,7 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
         return preOrderRec(this.root).trim();
     }
 
-    private String preOrderRec(Node<E> current) {
+    private String preOrderRec(NodeTree<E> current) {
         if (current == null) return "";
         return current.getData() + " " + preOrderRec(current.getLeft()) + preOrderRec(current.getRight());
     }
@@ -245,7 +245,7 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
         return postOrderRec(this.root).trim();
     }
 
-    private String postOrderRec(Node<E> current) {
+    private String postOrderRec(NodeTree<E> current) {
         if (current == null) return "";
         return postOrderRec(current.getLeft()) + postOrderRec(current.getRight()) + current.getData() + " ";
     }
@@ -263,7 +263,7 @@ public void RecorridoInOrder(){
         postOrder(root);
     }
 
-    private void inOrder(Node<E> nodo) {
+    private void inOrder(NodeTree<E> nodo) {
         if (nodo != null) {
             inOrder(nodo.getLeft());
             System.out.print(nodo.getData() + " ");
@@ -271,7 +271,7 @@ public void RecorridoInOrder(){
         }
     }
 
-    private void preOrder(Node<E> nodo) {
+    private void preOrder(NodeTree<E> nodo) {
         if (nodo != null) {
             System.out.print(nodo.getData() + " ");
             preOrder(nodo.getLeft());
@@ -279,7 +279,7 @@ public void RecorridoInOrder(){
         }
     }
 
-    private void postOrder(Node<E> nodo) {
+    private void postOrder(NodeTree<E> nodo) {
         if (nodo != null) {
             postOrder(nodo.getLeft());
             postOrder(nodo.getRight());
@@ -301,7 +301,7 @@ public void RecorridoInOrder(){
         return countAllNodesRecursive(root);
     }
 
-    private int countAllNodesRecursive(Node<E> nodo) {
+    private int countAllNodesRecursive(NodeTree<E> nodo) {
         if (nodo == null) {
             return 0;
         }
@@ -313,28 +313,28 @@ public void RecorridoInOrder(){
         return countInternalNodesRecursive(root);
     }
 
-    private int countInternalNodesRecursive(Node<E> nodo) {
+    private int countInternalNodesRecursive(NodeTree<E> nodo) {
         if (nodo == null || (nodo.getLeft() == null && nodo.getRight() == null)) {
             return 0;
         }
         return 1 + countInternalNodesRecursive(nodo.getLeft()) + countInternalNodesRecursive(nodo.getRight());
     }
-//    d
-    public int height(E dato) {
+    //    d
+    public int height(E dato) throws ItemNotFound {
         // Si el árbol está vacío
         if (root == null) {
             return -1;
         }
 
         // Buscar el nodo desde el cual queremos calcular la altura
-        E nodoX = searchBinary(root, dato);
+        NodeTree<E> nodoX = new NodeTree<>(search(dato));
 
         if (nodoX == null) {
-            return -1;
+            return -1; // El dato no existe en el árbol
         }
 
         // Usamos BFS para calcular la altura
-        LinkedQueue<E> cola = new LinkedQueue<>();
+        LinkedQueue<NodeTree<E>> cola = new LinkedQueue<>();
         cola.enqueue(nodoX); // Agregamos el nodo inicial
 
         int altura = -1; // Inicializamos en -1 porque incrementamos al principio de cada nivel
@@ -347,14 +347,14 @@ public void RecorridoInOrder(){
                 int nodosEnNivel = cola.size(); // Usando el nuevo método size()
 
                 for (int i = 0; i < nodosEnNivel; i++) {
-                    E actual = cola.dequeue();
+                    NodeTree<E> actual = cola.dequeue();
 
                     // Agregamos los hijos a la cola para procesarlos en el siguiente nivel
-                    if (actual.left != null) {
-                        cola.enqueue(actual.left);
+                    if (actual.getLeft() != null) {
+                        cola.enqueue(actual.getLeft());
                     }
-                    if (actual.right != null) {
-                        cola.enqueue(actual.right);
+                    if (actual.getRight() != null) {
+                        cola.enqueue(actual.getRight());
                     }
                 }
             }
@@ -364,6 +364,115 @@ public void RecorridoInOrder(){
         }
 
         return altura;
+    }
+
+    public int amplitude(int nivel) {
+        // Si el árbol está vacío o el nivel es negativo
+        if (root == null || nivel < 0) {
+            return 0;
+        }
+
+        // Usamos BFS para recorrer el árbol por niveles
+        LinkedQueue<NodeTree<E>> cola = new LinkedQueue<>();
+        cola.enqueue(root);
+
+        int nivelActual = 0;
+
+        try {
+            while (!cola.isEmpty() && nivelActual < nivel) {
+                nivelActual++; // Pasamos al siguiente nivel
+
+                // Procesamos todos los nodos en el nivel actual
+                int nodosEnNivel = cola.size();
+
+                for (int i = 0; i < nodosEnNivel; i++) {
+                    NodeTree<E> actual = cola.dequeue();
+
+                    // Agregamos los hijos a la cola para procesarlos en el siguiente nivel
+                    if (actual.getLeft() != null) {
+                        cola.enqueue(actual.getLeft());
+                    }
+                    if (actual.getRight() != null) {
+                        cola.enqueue(actual.getRight());
+                    }
+                }
+            }
+
+            // Si llegamos al nivel deseado, la cantidad de nodos en la cola es la amplitud
+            if (nivelActual == nivel) {
+                return cola.size();
+            } else {
+                return 0; // El nivel solicitado no existe en el árbol
+            }
+        } catch (ExceptionIsEmpty e) {
+            // Esto no debería ocurrir ya que verificamos isEmpty() antes
+            System.err.println("Error: " + e.getMessage());
+            return 0;
+        }
+    }
+
+    public int maxAmplitude() throws ItemNotFound {
+        if (root == null) {
+            return 0;
+        }
+
+        int altura = height(root.getData()); // Altura total del árbol
+        int maxAnchura = 0;
+
+        // Comprobamos la amplitud de cada nivel y nos quedamos con el máximo
+        for (int nivel = 0; nivel <= altura; nivel++) {
+            int anchuraNivel = amplitude(nivel);
+            if (anchuraNivel > maxAnchura) {
+                maxAnchura = anchuraNivel;
+            }
+        }
+
+        return maxAnchura;
+    }
+
+    public int areaBST() {
+        if (root == null) {
+            return 0; // Árbol vacío tiene área 0
+        }
+
+        // Calcular la altura del árbol completo
+        int altura;
+        try {
+            altura = height(root.getData());
+        } catch (ItemNotFound e) {
+            // Esto no debería ocurrir ya que estamos usando la raíz
+            return 0;
+        }
+
+        // Contar nodos hoja usando un recorrido BFS iterativo
+        int hojas = 0;
+        LinkedQueue<NodeTree<E>> cola = new LinkedQueue<>();
+        cola.enqueue(root);
+
+        try {
+            while (!cola.isEmpty()) {
+                NodeTree<E> actual = cola.dequeue();
+
+                // Verificar si es un nodo hoja (sin hijos)
+                if (actual.getLeft() == null && actual.getRight() == null) {
+                    hojas++;
+                }
+
+                // Agregar hijos a la cola
+                if (actual.getLeft() != null) {
+                    cola.enqueue(actual.getLeft());
+                }
+                if (actual.getRight() != null) {
+                    cola.enqueue(actual.getRight());
+                }
+            }
+        } catch (ExceptionIsEmpty e) {
+            // Esto no debería ocurrir ya que verificamos isEmpty() antes
+            System.err.println("Error: " + e.getMessage());
+        }
+
+        // Calcular el área como: número de hojas × altura
+        return hojas * altura;
     }
 
 
@@ -413,7 +522,7 @@ public void RecorridoInOrder(){
         return result.toString();
     }
 
-    private void drawNode(Node<E> node, String prefix, boolean isTail, StringBuilder result) {
+    private void drawNode(NodeTree<E> node, String prefix, boolean isTail, StringBuilder result) {
         if (node != null) {
             // Dibuja el nodo actual
             result.append(prefix)
@@ -440,6 +549,53 @@ public void RecorridoInOrder(){
         }
     }
 
+    public <E extends Comparable<E>> boolean sameArea(LinkedBST<E> arbol1, LinkedBST<E> arbol2) {
+        // Validación 1: Si ambos árboles son nulos, consideramos que tienen la misma área (área 0)
+        if (arbol1 == null && arbol2 == null) {
+            return true;
+        }
+
+        // Validación 2: Si solo uno de los árboles es nulo, no pueden tener la misma área
+        if (arbol1 == null || arbol2 == null) {
+            return false;
+        }
+
+        try {
+            // Validación 3: Verificamos si los árboles están vacíos
+            boolean arbol1Vacio = arbol1.isEmpty();
+            boolean arbol2Vacio = arbol2.isEmpty();
+
+            // Si ambos están vacíos, tienen la misma área (área 0)
+            if (arbol1Vacio && arbol2Vacio) {
+                return true;
+            }
+
+            // Si solo uno está vacío, no pueden tener la misma área
+            if (arbol1Vacio || arbol2Vacio) {
+                return false;
+            }
+
+            // Cálculo de áreas con manejo de posibles errores
+            int areaArbol1 = arbol1.areaBST();
+            int areaArbol2 = arbol2.areaBST();
+
+            // Validación 4: Verificar posibles valores negativos o erróneos
+            if (areaArbol1 < 0 || areaArbol2 < 0) {
+                System.err.println("Advertencia: Se obtuvo un área negativa, posible error en el cálculo.");
+                return false;
+            }
+
+            // Comparamos las áreas y retornamos el resultado
+            return areaArbol1 == areaArbol2;
+
+        } catch (Exception e) {
+            // Manejo de cualquier excepción inesperada
+            System.err.println("Error al comparar áreas: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     @Override // In Order
     public String toString() {
         if (isEmpty()) {
@@ -460,7 +616,7 @@ public void RecorridoInOrder(){
         return sb.toString();
     }
 
-    private void inOrderToString(Node<E> node, StringBuilder sb) {
+    private void inOrderToString(NodeTree<E> node, StringBuilder sb) {
         if (node != null) {
             inOrderToString(node.getLeft(), sb);
             if (sb.length() > 1) {
@@ -491,7 +647,7 @@ public void RecorridoInOrder(){
         return sb.toString();
     }
 
-    private void parenthesize(Node<E> node, StringBuilder sb, int level) {
+    private void parenthesize(NodeTree<E> node, StringBuilder sb, int level) {
         if (node == null) {
             return;
         }
