@@ -35,6 +35,7 @@ class Main {
 
         System.out.println("\nRepresentación con paréntesis:");
         System.out.println(tree.parenthesize());
-//        tree.printTree();
+
+
     }
 }

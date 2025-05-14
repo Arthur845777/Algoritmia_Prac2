@@ -31,3 +31,9 @@
         return postOrderRec(current.getLeft()) + postOrderRec(current.getRight()) + current.getData() + " ";
     }
 
+        System.out.println("\n");
+        tree.RecorridoInOrder();
+        System.out.println("\n");
+        tree.RecorridoPostorder();
+        System.out.println("\n");
+        tree.RecorridoInOrder();

@@ -355,6 +355,7 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
         return maxAnchura;
     }
 
+    //------------------------------------------EJERCICIOS-2-------------------------------------------------------
     public int areaBST() {
         if (root == null) {
             return 0;
@@ -394,7 +395,7 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
         return hojas * altura;
     }
 
-    // Método para dibujar el árbol
+    //  dibujar arbol
     public String drawBST() {
         if (isEmpty()) {
             return "El árbol está vacío";
@@ -499,19 +500,20 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
             int areaArbol2 = arbol2.areaBST();
 
             if (areaArbol1 < 0 || areaArbol2 < 0) {
-                System.err.println("Advertencia: Se obtuvo un área negativa, posible error en el cálculo.");
+                System.err.println("Stop: Se tiene un area negativa, no es posible continuar :'v.");
                 return false;
             }
 
             return areaArbol1 == areaArbol2;
 
         } catch (Exception e) {
-            System.err.println("Error al comparar áreas: " + e.getMessage());
+            System.err.println("Error al comparar areas: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
     }
 
+    //------------------------------------------EJERCICIOS-3-------------------------------------------------------
     public String parenthesize() {
         if (isEmpty()) {
             return "()";
@@ -551,4 +553,3 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
         }
     }
 }
-
