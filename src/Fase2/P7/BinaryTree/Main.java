@@ -4,7 +4,7 @@ import Fase2.P7.Exceptions.ItemDuplicated;
 
 class Main {
     public static void main(String[] args) {
-        LinkedBST<Integer> tree = new LinkedBST<>();
+        BSTree<Integer> tree = new BSTree<>();
         try {
             tree.insert(11);  // Raíz - elemento medio
             tree.insert(4);   // Medio del subárbol izquierdo

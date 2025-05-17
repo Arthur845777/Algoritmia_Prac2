@@ -1,15 +1,15 @@
 package Fase2.P8.Node;
 
 public class Node<E> {
-    private E data;
-    private Node<E> right;
-	private Node<E> left;
+	protected E data;
+	protected Node<E> right;
+	protected Node<E> left;
 
-    public Node(E data) {
-        this.data = data;
-        this.right = null;
+	public Node(E data) {
+		this.data = data;
+		this.right = null;
 		this.left = null;
-    }
+	}
 
 	public E getData() {
 		return data;

@@ -7,10 +7,10 @@ import Fase2.P7.Exceptions.ItemNotFound;
 import Fase2.P7.Node.NodeTree;
 import Fase2.P7.Queue.LinkedQueue;
 
-public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
-    private NodeTree<E> root;
+public class BSTree<E extends Comparable<E>> implements BinarySearchTree<E> {
+    protected NodeTree<E> root;
 
-    public LinkedBST() {
+    public BSTree() {
         root = null;
     }
 
@@ -484,7 +484,7 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
         }
     }
 
-    public <E extends Comparable<E>> boolean sameArea(LinkedBST<E> arbol2) {
+    public <E extends Comparable<E>> boolean sameArea(BSTree<E> arbol2) {
 
         if (root == null && arbol2 == null) {
             return true;
