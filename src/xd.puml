@@ -1,0 +1,70 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam classFontStyle bold
+hide circle
+skinparam classFontSize 14
+'skinparam classFontName "TimesNewRoman"
+
+
+skinparam class{
+    BackgroundColor LightBlue
+    BorderColor Black
+    BorderThickness 2
+}
+
+class Usuario {
+    - nombre
+    - clave
+    - email
+    - punt_max
+    + donar()
+    + registrarse(string, string)
+    + iniciar_sesion(): bool
+    + reproducir_video()
+    + jugar()
+    + compartir()
+    + descargar()
+    + cerrar_sesion()
+}
+
+class Web {
+    - nombre
+    - num_visitas
+    + mostrar_video()
+    + descargar_juego()
+    + boton_donar()
+    + boton_compartir()
+}
+
+class Juego {
+    - nombre
+    - record
+    + usar_turbo()
+    + moverse()
+    + iniciar_partida(string)
+    + terminar_partida()
+    + guardar_punt(integer)
+}
+
+class Red_social {
+    - nombre
+    - URL
+    - icono
+}
+
+class Donar_Paypal {
+    - cantidad
+    - URL
+}
+
+Usuario "0..*" -- "*" Web : accede
+
+Usuario "0..1" -- "*" Juego : juega
+
+Web "1" *-- "1" Juego : muestra
+
+Web "*" *-- "0..1" Red_social : comparte
+
+Web "*" *-- "0..1" Donar_Paypal : dona
+
+@enduml

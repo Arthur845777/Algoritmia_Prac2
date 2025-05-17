@@ -1,11 +1,11 @@
 package Fase2.P8.Node;
 
-public class NodeAVL<E> {
+public class Node<E> {
     private E data;
-    private NodeAVL<E> right;
-	private NodeAVL<E> left;
+    private Node<E> right;
+	private Node<E> left;
 
-    public NodeAVL(E data) {
+    public Node(E data) {
         this.data = data;
         this.right = null;
 		this.left = null;
@@ -18,17 +18,17 @@ public class NodeAVL<E> {
 		this.data = data;
 	}
 
-	public NodeAVL<E> getRight() {
+	public Node<E> getRight() {
 		return right;
 	}
-	public void setRight(NodeAVL<E> next) {
+	public void setRight(Node<E> next) {
 		this.right = next;
 	}
 
-	public NodeAVL<E> getLeft() {
+	public Node<E> getLeft() {
 		return left;
 	}
-	public void setLeft(NodeAVL<E> next) {
+	public void setLeft(Node<E> next) {
 		this.left = next;
 	}
 }

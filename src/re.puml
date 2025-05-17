@@ -1,0 +1,50 @@
+@startuml
+skinparam classAttributeIconSize 0
+hide circle
+
+left to right direction
+
+class Cliente{
+- DNI: String
+- Nombre: String
+- Direccion: String
+- Telefono: String
+- Codigo: String
+}
+
+class Reserva{
+- Coche: Coche[1..*]
+- FechaInicio: Date
+- FechaFinal: Date
+- PrecioTotalAlquiler: Double
+- LitrosGasolina: int
+- PrecioTotalReserva: Double
+- CocheEntregado: Boolean
+}
+
+class Coche{
+- Matricula: String
+- Modelo: String
+- Color: String
+- Marca: String
+# GarajeAsignado : Garaje
+}
+
+class Garaje{
+# CantidadCoche: int
+}
+
+class Agencia{
+- NombreAgencia :String
+- CodigoAgencia :String
+}
+
+Cliente "1" -- "0..*" Cliente : avalado
+Cliente "1" -- "1..*" Reserva : realiza
+
+Reserva "1" -- "1..*" Coche : involucrar
+Coche  "1..*" -- "1" Garaje : Asignado
+
+Reserva  "0..*" --> "1" Agencia : realizar
+
+@enduml
