@@ -9,32 +9,25 @@ public class MainAVL {
         AVLTree<Integer> avl = new AVLTree<>();
 
         try {
-            avl.insert(9);
-            avl.insert(10);
-            avl.insert(5);
-            avl.insert(1);
-            avl.insert(7);
-            avl.insert(6);
-
+            avl.insert(100);
+            avl.insert(110);
+            avl.insert(150);
+            avl.insert(90);
+            avl.insert(95);
 
             System.out.println("Árbol AVL creado con éxito.\n");
 
-            // Imprimir estructura del árbol en formato parenthesize
             System.out.println("Estructura del árbol (parenthesize):");
             System.out.println(avl.parenthesize());
 
-            // Buscar un elemento
-            Integer toSearch = 25;
-            Integer result = avl.search(toSearch);
 
-//            System.out.println("Elemento encontrado: " + result);
-            System.out.println(avl.height(avl.getNode()));
-            System.out.println(avl.balanceFactor(avl.getNode()));
+            System.out.println(avl.height(avl.getNode())); // ALTURA
+            System.out.println(avl.balanceFactor(avl.getNode())); // F_BALANCE
+
+
 
         } catch (ItemDuplicated e) {
             System.err.println("Error: " + e.getMessage());
-        } catch (ItemNotFound e) {
-            System.err.println("Elemento no encontrado: " + e.getMessage());
         }
     }
 }

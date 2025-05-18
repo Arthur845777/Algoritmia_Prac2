@@ -98,98 +98,69 @@ public class AVLTree<E extends Comparable<E>> extends BSTree<E> {
         return fat;
     }
 
-    protected NodeAVL balanceToRight(NodeAVL abuelo) {
-        NodeAVL hijo = (NodeAVL) abuelo.getLeft();
+    private NodeAVL balanceToRight(NodeAVL node) {
+        NodeAVL hijo = (NodeAVL)node.getLeft();
 
-        switch (hijo.bf) {
-            case 1: // simple a la dere, este es el normalito, plan esta sobercargado pero normal o,o
-                abuelo.bf = 0;
+        switch(hijo.bf) {
+            case -1:  // simple a la dere, este es el normalito, plan esta sobercargado pero normal o,o
+                node.bf = 0;
                 hijo.bf = 0;
-                abuelo = rotateSRight(abuelo);
+                node = rotateSRight(node);
                 break;
-
             case 0:
-                abuelo.bf = -1;
+                node.bf = -1;
                 hijo.bf = 1;
-                abuelo = rotateSRight(abuelo);
+                node = rotateSRight(node);
                 break;
-
-            case -1: // doble, izq y luego dere, que kilombo xd
-                NodeAVL nieto = (NodeAVL) abuelo.getRight();
-
-                switch (nieto.bf) {
-                    case -1:
-                        abuelo.bf = 0;
-                        hijo.bf = 0;
-                        break;
-
-                    case 0:
-                        abuelo.bf = 0;
-                        hijo.bf = 0;
-                        break;
-
-                    case 1:
-                        abuelo.bf = -1;
-                        hijo.bf = 0;
-                        break;
+            case 1:   // doble, izq y luego der, que kilombo xd
+                NodeAVL nieto = (NodeAVL)hijo.getRight();
+                switch(nieto.bf) {
+                    case 1:  node.bf = 0; hijo.bf = -1; break;
+                    case 0:  node.bf = 0; hijo.bf = 0; break;
+                    case -1: node.bf = 1; hijo.bf = 0; break;
                 }
                 nieto.bf = 0;
-
-                abuelo.setRight(rotateSLeft(hijo));
-                abuelo = rotateSLeft(abuelo);
+                node.setLeft(rotateSLeft(hijo));
+                node = rotateSRight(node);
+                break;
         }
-
-        return abuelo;
+        return node;
     }
 
-    protected NodeAVL balanceToLeft(NodeAVL abuelo) {
-        NodeAVL hijo = (NodeAVL) abuelo.getRight();
+    private NodeAVL balanceToLeft(NodeAVL node) {
+        NodeAVL hijo = (NodeAVL)node.getRight();
 
-        switch (hijo.bf){
+        switch(hijo.bf) {
             case 1: // simple a la izq, este es el normalito, plan esta sobercargado pero normal o,o
-                abuelo.bf = 0;
+                node.bf = 0;
                 hijo.bf = 0;
-                abuelo = rotateSLeft(abuelo);
+                node = rotateSLeft(node);
                 break;
-
             case 0:
-                abuelo.bf = -1;
+                node.bf = 1;
                 hijo.bf = -1;
-                abuelo = rotateSLeft(abuelo);
+                node = rotateSLeft(node);
                 break;
-
-            case -1: // doble, dere y luego izq, que kilombo xd
+            case -1: // doble, der y luego izq, que kilombo xd
                 NodeAVL nieto = (NodeAVL)hijo.getLeft();
-
-                switch (nieto.bf){
-                    case -1:
-                        abuelo.bf = 0;
-                        hijo.bf = 1;
-                        break;
-
-                    case 0:
-                        abuelo.bf = 0;
-                        hijo.bf = -1;
-                        break;
-
-                    case 1:
-                        abuelo.bf = -1;
-                        hijo.bf = 0;
-                        break;
+                switch(nieto.bf) {
+                    case -1: node.bf = 0; hijo.bf = 1; break;
+                    case 0:  node.bf = 0; hijo.bf = 0; break;
+                    case 1:  node.bf = -1; hijo.bf = 0; break;
                 }
                 nieto.bf = 0;
-                abuelo.setRight(rotateSRight(hijo));
-                abuelo = rotateSLeft(abuelo);
+                node.setRight(rotateSRight(hijo));
+                node = rotateSLeft(node);
                 break;
         }
-
-        return abuelo;
+        return node;
     }
 
+// bien, comprobados
     private NodeAVL rotateSLeft(NodeAVL node) {
         NodeAVL p = (NodeAVL)node.getRight();
-        node.setRight(p.getLeft());
-        p.setLeft(node);
+        node.setRight(p.getLeft()); // bien
+        p.setLeft(node); // bien
         node = p;
         return node;
     }
