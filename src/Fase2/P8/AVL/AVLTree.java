@@ -3,7 +3,6 @@ package Fase2.P8.AVL;
 import Fase2.P7.BinaryTree.BSTree;
 import Fase2.P7.Exceptions.*;
 import Fase2.P7.Node.NodeTree;
-import Fase2.P8.Node.Node;
 
 public class AVLTree<E extends Comparable<E>> extends BSTree<E> {
     private boolean height; // para la altura
@@ -201,6 +200,31 @@ public class AVLTree<E extends Comparable<E>> extends BSTree<E> {
         node = p;
         return node;
     }
+
+    public int height(NodeAVL nodo){
+        if(nodo == null){
+            return 0;
+
+        } else {
+            int hleft = height((NodeAVL)nodo.getLeft());
+            int hright = height((NodeAVL)nodo.getRight());
+            if (hleft > hright) {
+                return hleft + 1;
+            } else {
+                return hright + 1;
+            }
+        }
+    }
+
+    public int balanceFactor(NodeAVL nodo){
+        return height((NodeAVL)nodo.getRight()) - height((NodeAVL)nodo.getLeft());
+    }
+
+    public NodeAVL getNode() {
+        return (NodeAVL)root;
+    }
+
+
 
     // También necesitarás sobrescribir el método delete para mantener balanceado el árbol
     @Override
