@@ -42,10 +42,7 @@ public class BSTree<E extends Comparable<E>> implements BinarySearchTree<E> {
         if (isEmpty()) {
             throw new ExceptionIsEmpty("El árbol está vacío");
         }
-
-//        boolean found = deleteBinary(null, root, currentNode); // 1er metodo con padre e hijo
         root = eliminar(root, currentNode); // 2do metodo
-
     }
 
     private boolean deleteBinary(NodeTree<E> parent, NodeTree<E> current, E data) {

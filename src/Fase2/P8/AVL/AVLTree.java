@@ -35,22 +35,22 @@ public class AVLTree<E extends Comparable<E>> extends BSTree<E> {
         this.root = insert(x, (NodeAVL)this.root);
     }
 
-    protected NodeAVL insert(E x, NodeAVL node) throws ItemDuplicated {
-        NodeAVL fat = node;
+    protected NodeAVL insert(E data, NodeAVL current) throws ItemDuplicated {
+        NodeAVL fat = current;
 
-        if (node == null) {
+        if (current == null) {
             this.height = true;
-            fat = new NodeAVL(x);
+            fat = new NodeAVL(data);
         } else {
 
-            int compare = node.getData().compareTo(x); // right -1, left +1
+            int compare = data.compareTo(current.getData()); // right +1, left -1
 
             if (compare == 0) {
-                throw new ItemDuplicated(x + " ya se encuentra en el árbol...");
+                throw new ItemDuplicated(data + " ya se encuentra en el árbol...");
             }
 
-            if (compare < 0) { // right
-                fat.setRight(insert(x, (NodeAVL)node.getRight()));
+            if (compare > 0) { // right
+                fat.setRight(insert(data, (NodeAVL) current.getRight()));
 
                 if (this.height) {
                     switch (fat.bf) {
@@ -73,7 +73,7 @@ public class AVLTree<E extends Comparable<E>> extends BSTree<E> {
             }
 
             else { // left
-                fat.setLeft(insert(x, (NodeAVL)node.getLeft()));
+                fat.setLeft(insert(data, (NodeAVL) current.getLeft()));
 
                 if (this.height) {
                     switch (fat.bf) {
@@ -98,62 +98,88 @@ public class AVLTree<E extends Comparable<E>> extends BSTree<E> {
         return fat;
     }
 
-    private NodeAVL balanceToRight(NodeAVL node) {
-        NodeAVL hijo = (NodeAVL)node.getLeft();
+    private NodeAVL balanceToRight(NodeAVL abuelo) {
+        NodeAVL hijo = (NodeAVL) abuelo.getLeft();
 
         switch(hijo.bf) {
             case -1:  // simple a la dere, este es el normalito, plan esta sobercargado pero normal o,o
-                node.bf = 0;
+                abuelo.bf = 0;
                 hijo.bf = 0;
-                node = rotateSRight(node);
+                abuelo = rotateSRight(abuelo);
                 break;
+
             case 0:
-                node.bf = -1;
+                abuelo.bf = -1;
                 hijo.bf = 1;
-                node = rotateSRight(node);
+                abuelo = rotateSRight(abuelo);
                 break;
+
             case 1:   // doble, izq y luego der, que kilombo xd
                 NodeAVL nieto = (NodeAVL)hijo.getRight();
                 switch(nieto.bf) {
-                    case 1:  node.bf = 0; hijo.bf = -1; break;
-                    case 0:  node.bf = 0; hijo.bf = 0; break;
-                    case -1: node.bf = 1; hijo.bf = 0; break;
+                    case 1:
+                        abuelo.bf = 0;
+                        hijo.bf = -1;
+                        break;
+
+                    case 0:
+                        abuelo.bf = 0;
+                        hijo.bf = 0;
+                        break;
+
+                    case -1:
+                        abuelo.bf = 1;
+                        hijo.bf = 0;
+                        break;
                 }
                 nieto.bf = 0;
-                node.setLeft(rotateSLeft(hijo));
-                node = rotateSRight(node);
+                abuelo.setLeft(rotateSLeft(hijo));
+                abuelo = rotateSRight(abuelo);
                 break;
         }
-        return node;
+        return abuelo;
     }
 
-    private NodeAVL balanceToLeft(NodeAVL node) {
-        NodeAVL hijo = (NodeAVL)node.getRight();
+    private NodeAVL balanceToLeft(NodeAVL abuelo) {
+        NodeAVL hijo = (NodeAVL) abuelo.getRight();
 
         switch(hijo.bf) {
             case 1: // simple a la izq, este es el normalito, plan esta sobercargado pero normal o,o
-                node.bf = 0;
+                abuelo.bf = 0;
                 hijo.bf = 0;
-                node = rotateSLeft(node);
+                abuelo = rotateSLeft(abuelo);
                 break;
+
             case 0:
-                node.bf = 1;
+                abuelo.bf = 1;
                 hijo.bf = -1;
-                node = rotateSLeft(node);
+                abuelo = rotateSLeft(abuelo);
                 break;
+
             case -1: // doble, der y luego izq, que kilombo xd
                 NodeAVL nieto = (NodeAVL)hijo.getLeft();
                 switch(nieto.bf) {
-                    case -1: node.bf = 0; hijo.bf = 1; break;
-                    case 0:  node.bf = 0; hijo.bf = 0; break;
-                    case 1:  node.bf = -1; hijo.bf = 0; break;
+                    case -1:
+                        abuelo.bf = 0;
+                        hijo.bf = 1;
+                        break;
+
+                    case 0:
+                        abuelo.bf = 0;
+                        hijo.bf = 0;
+                        break;
+
+                    case 1:
+                        abuelo.bf = -1;
+                        hijo.bf = 0;
+                        break;
                 }
                 nieto.bf = 0;
-                node.setRight(rotateSRight(hijo));
-                node = rotateSLeft(node);
+                abuelo.setRight(rotateSRight(hijo));
+                abuelo = rotateSLeft(abuelo);
                 break;
         }
-        return node;
+        return abuelo;
     }
 
 // bien, comprobados
@@ -196,29 +222,98 @@ public class AVLTree<E extends Comparable<E>> extends BSTree<E> {
     }
 
 
-
-    // También necesitarás sobrescribir el método delete para mantener balanceado el árbol
+//    ------------------------------MIGUEL-------------------------------------------
     @Override
-    public void delete(E data) throws ExceptionIsEmpty {
+    public void RecorridoPreOrder(){
+        preOrder((NodeAVL)root);
+    }
+
+    private void preOrder(NodeAVL nodo) {
+        if (nodo != null) {
+            System.out.print(nodo.getData() + " ");
+            preOrder((NodeAVL)nodo.getLeft());
+            preOrder((NodeAVL)nodo.getRight());
+        }
+    }
+
+//    public int heightof(E data) throws ExceptionIsEmpty {
+//        if (isEmpty()) {
+//            throw new ExceptionIsEmpty("El árbol está vacío");
+//        }
+//
+//        NodeAVL node = searchBinary((NodeAVL)root, data);
+//        if (node == null) {
+//            return -1; // El nodo no existe
+//        }
+//
+//        return heightRecursive(node);
+//    }
+//
+//    private int heightRecursive(NodeAVL node) {
+//        if (node == null) {
+//            return -1;
+//        }
+//
+//        int leftHeight = heightRecursive((NodeAVL) node.getLeft());
+//
+//        int rightHeight = heightRecursive((NodeAVL) node.getRight());
+//
+//        return Math.max(leftHeight, rightHeight) + 1;
+//    }
+
+    @Override
+    public E search(E data) throws ItemNotFound {
+        NodeAVL result = searchBinary((NodeAVL)root, data);
+
+        if (result == null) {
+            throw new ItemNotFound("El elemento no se encuentra en el árbol");
+        }
+        return result.getData();
+    }
+
+    private NodeAVL searchBinary(NodeAVL currentNode, E data) {
+        if (currentNode == null) {
+            return null;
+        }
+
+        int compare = data.compareTo(currentNode.getData());
+
+        if (compare < 0) {
+            return searchBinary((NodeAVL)currentNode.getLeft(), data);
+        } else if (compare > 0) {
+            return searchBinary((NodeAVL)currentNode.getRight(), data);
+        } else {
+            return currentNode;
+        }
+    }
+
+    public void printByLevels() throws ExceptionIsEmpty {
         if (isEmpty()) {
             throw new ExceptionIsEmpty("El árbol está vacío");
         }
 
-        height = false;
-        root = deleteAVL(data, (NodeTree<E>)root);
+        int height = height((NodeAVL) root);
+
+        for (int level = 0; level <= height; level++) {
+            System.out.print("Nivel " + level + ": ");
+            printGivenLevel((NodeAVL)root, level);
+            System.out.println(); // Salto de línea después de cada nivel
+        }
     }
 
-    private NodeTree<E> deleteAVL(E data, NodeTree<E> current) throws ExceptionIsEmpty {
-        // Este método necesitaría implementarse para eliminar nodos y mantener el balanceo
-        // Similar a insertAVL pero con lógica para eliminar nodos
 
-        // Por ahora, dejo un esqueleto básico
-        if (current == null) {
-            throw new ExceptionIsEmpty("El elemento no está en el árbol");
+    private void printGivenLevel(NodeAVL node, int level) {
+        if (node == null) {
+            return;
         }
 
-        // Aquí iría la implementación completa
-
-        return current;
+        if (level == 0) {
+            // Estamos en el nivel que queremos imprimir
+            System.out.print(node.getData() + " ");
+        } else if (level > 0) {
+            // Recursivamente bajar al nivel adecuado
+            printGivenLevel((NodeAVL)node.getLeft(), level - 1);
+            printGivenLevel((NodeAVL)node.getRight(), level - 1);
+        }
     }
 }

@@ -1,5 +1,6 @@
 package Fase2.P8.Test;
 
+import Fase2.P7.Exceptions.ExceptionIsEmpty;
 import Fase2.P8.AVL.AVLTree;
 import Fase2.P7.Exceptions.ItemDuplicated;
 import Fase2.P7.Exceptions.ItemNotFound;
@@ -24,9 +25,10 @@ public class MainAVL {
             System.out.println(avl.height(avl.getNode())); // ALTURA
             System.out.println(avl.balanceFactor(avl.getNode())); // F_BALANCE
 
+            avl.printByLevels();
 
 
-        } catch (ItemDuplicated e) {
+        } catch (ItemDuplicated | ExceptionIsEmpty e) {
             System.err.println("Error: " + e.getMessage());
         }
     }
