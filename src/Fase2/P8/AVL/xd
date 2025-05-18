@@ -1,0 +1,117 @@
+@Override
+public void delete(E data) throws ExceptionIsEmpty {
+    if (isEmpty()) {
+        throw new ExceptionIsEmpty("El árbol está vacío");
+    }
+
+    this.height = false; // Initialize height change flag
+    root = deleteAVL(data, (NodeAVL)root);
+}
+
+private NodeAVL deleteAVL(E data, NodeAVL current) throws ExceptionIsEmpty {
+    if (current == null) {
+        throw new ExceptionIsEmpty("El elemento no está en el árbol");
+    }
+
+    int compareResult = data.compareTo(current.getData());
+
+    if (compareResult < 0) { // Go left
+        current.setLeft(deleteAVL(data, (NodeAVL)current.getLeft()));
+
+        if (this.height) { // Height changed after deletion
+            switch (current.bf) {
+                case -1: // Was left-heavy, now balanced
+                    current.bf = 0;
+                    break;
+
+                case 0: // Was balanced, now right-heavy
+                    current.bf = 1;
+                    this.height = false; // Tree height doesn't change
+                    break;
+
+                case 1: // Was right-heavy, now unbalanced
+                    // Need to balance: right subtree is 2 levels taller than left
+                    current = balanceToLeft(current);
+                    break;
+            }
+        }
+    }
+    else if (compareResult > 0) { // Go right
+        current.setRight(deleteAVL(data, (NodeAVL)current.getRight()));
+
+        if (this.height) { // Height changed after deletion
+            switch (current.bf) {
+                case 1: // Was right-heavy, now balanced
+                    current.bf = 0;
+                    break;
+
+                case 0: // Was balanced, now left-heavy
+                    current.bf = -1;
+                    this.height = false; // Tree height doesn't change
+                    break;
+
+                case -1: // Was left-heavy, now unbalanced
+                    // Need to balance: left subtree is 2 levels taller than right
+                    current = balanceToRight(current);
+                    break;
+            }
+        }
+    }
+    else { // Found node to delete
+        // Case 1: Leaf node
+        if (current.getLeft() == null && current.getRight() == null) {
+            this.height = true; // Height will definitely change
+            return null;
+        }
+        // Case 2: Node with only right child
+        else if (current.getLeft() == null) {
+            this.height = true; // Height will change
+            return (NodeAVL)current.getRight();
+        }
+        // Case 3: Node with only left child
+        else if (current.getRight() == null) {
+            this.height = true; // Height will change
+            return (NodeAVL)current.getLeft();
+        }
+        // Case 4: Node with two children
+        else {
+            // Find minimum value in right subtree (successor)
+            NodeAVL successor = findMinNode((NodeAVL)current.getRight());
+
+            // Replace current node's data with successor's data
+            current.setData(successor.getData());
+
+            // Delete the successor from the right subtree
+            current.setRight(deleteAVL(successor.getData(), (NodeAVL)current.getRight()));
+
+            // Check if balance needs adjustment after right subtree modification
+            if (this.height) {
+                switch (current.bf) {
+                    case 1: // Was right-heavy, now balanced
+                        current.bf = 0;
+                        break;
+
+                    case 0: // Was balanced, now left-heavy
+                        current.bf = -1;
+                        this.height = false; // Tree height doesn't change
+                        break;
+
+                    case -1: // Was left-heavy, now unbalanced
+                        // Need to balance: left subtree is 2 levels taller than right
+                        current = balanceToRight(current);
+                        break;
+                }
+            }
+        }
+    }
+
+    return current;
+}
+
+private NodeAVL findMinNode(NodeAVL node) {
+    NodeAVL current = node;
+    while (current.getLeft() != null) {
+        current = (NodeAVL)current.getLeft();
+    }
+    return current;
+}
