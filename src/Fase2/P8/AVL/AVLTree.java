@@ -1,3 +1,5 @@
+// estos paquetes e importaciones tambien metelas en un minted aparte
+
 package Fase2.P8.AVL;
 
 import Fase2.P7.BinaryTree.BSTree;
@@ -7,7 +9,7 @@ import Fase2.P7.Node.NodeTree;
 public class AVLTree<E extends Comparable<E>> extends BSTree<E> {
     private boolean height; // para la altura
 
-    protected class NodeAVL extends NodeTree<E> {
+    public class NodeAVL extends NodeTree<E> {
         protected int bf; // balance factor
 
         public NodeAVL(E data) {
@@ -238,89 +240,83 @@ public class AVLTree<E extends Comparable<E>> extends BSTree<E> {
 
         int compareResult = data.compareTo(current.getData());
 
-        if (compareResult < 0) { // Ir a la izquierda
+        if (compareResult < 0) { // left
             current.setLeft(deleteAVL(data, (NodeAVL)current.getLeft()));
 
-            if (this.height) { // La altura cambió después de la eliminación
+            if (this.height) {
                 switch (current.bf) {
-                    case -1: // Estaba cargado a la izquierda, ahora balanceado
+                    case -1: // cargado left -> balanceado
                         current.bf = 0;
+                        this.height = false;
                         break;
 
-                    case 0: // Estaba balanceado, ahora cargado a la derecha
+                    case 0: // balanceado -> cargado right
                         current.bf = 1;
-                        this.height = false; // La altura del árbol no cambia
+
                         break;
 
-                    case 1: // Estaba cargado a la derecha, ahora desbalanceado
-                        // Necesitamos balancear: subárbol derecho es 2 niveles más alto que el izquierdo
+                    case 1: // cargado right -> desbalanceado, ahora x2 xD
                         current = balanceToLeft(current);
                         break;
                 }
             }
         }
-        else if (compareResult > 0) { // Ir a la derecha
+        else if (compareResult > 0) { // right
             current.setRight(deleteAVL(data, (NodeAVL)current.getRight()));
 
-            if (this.height) { // La altura cambió después de la eliminación
+            if (this.height) {
                 switch (current.bf) {
-                    case 1: // Estaba cargado a la derecha, ahora balanceado
+                    case 1: // cargadoright -> balanceado
                         current.bf = 0;
                         break;
 
-                    case 0: // Estaba balanceado, ahora cargado a la izquierda
+                    case 0: // balanceado -> cargado left
                         current.bf = -1;
-                        this.height = false; // La altura del árbol no cambia
+                        this.height = false;
                         break;
 
-                    case -1: // Estaba cargado a la izquierda, ahora desbalanceado
-                        // Necesitamos balancear: subárbol izquierdo es 2 niveles más alto que el derecho
+                    case -1: // cargado left -> desbalanceado, ahora x2 xD
                         current = balanceToRight(current);
                         break;
                 }
             }
         }
-        else { // Encontramos el nodo a eliminar
-            // Caso 1: Nodo hoja (sin hijos)
+        else { // eliminas pues o,o
+
             if (current.getLeft() == null && current.getRight() == null) {
-                this.height = true; // La altura definitivamente cambiará
+                this.height = true; // height no cambia
                 return null;
             }
-            // Caso 2: Nodo con solo hijo derecho
+
             else if (current.getLeft() == null) {
-                this.height = true; // La altura cambiará
+                this.height = true;
                 return (NodeAVL)current.getRight();
             }
-            // Caso 3: Nodo con solo hijo izquierdo
+
             else if (current.getRight() == null) {
-                this.height = true; // La altura cambiará
+                this.height = true;
                 return (NodeAVL)current.getLeft();
             }
-            // Caso 4: Nodo con dos hijos
+
             else {
-                // Encontrar el valor mínimo en el subárbol derecho (sucesor)
+
                 NodeAVL successor = findMinNode((NodeAVL)current.getRight());
-
-                // Reemplazar los datos del nodo actual con los datos del sucesor
                 current.setData(successor.getData());
-
-                // Eliminar el sucesor del subárbol derecho
                 current.setRight(deleteAVL(successor.getData(), (NodeAVL)current.getRight()));
 
-                // Verificar si se necesita ajustar el balance después de modificar el subárbol derecho
+                // verificas, minimo de tu rama derecha
                 if (this.height) {
                     switch (current.bf) {
-                        case 1: // Estaba cargado a la derecha, ahora balanceado
+                        case 1: // cargadoright ->  balanceado
                             current.bf = 0;
                             break;
 
-                        case 0: // Estaba balanceado, ahora cargado a la izquierda
+                        case 0: // balanceado -> cargado left
                             current.bf = -1;
-                            this.height = false; // La altura del árbol no cambia
+                            this.height = false;
                             break;
 
-                        case -1: // Estaba cargado a la izquierda, ahora desbalanceado
-                            // Necesitamos balancear: subárbol izquierdo es 2 niveles más alto que el derecho
+                        case -1: // cargadoleft -> desbalanceado x2 xD
                             current = balanceToRight(current);
                             break;
                     }
@@ -339,7 +335,6 @@ public class AVLTree<E extends Comparable<E>> extends BSTree<E> {
         return current;
     }
 
-//    ------------------------------MIGUEL-------------------------------------------
     @Override
     public void RecorridoPreOrder(){
         preOrder((NodeAVL)root);
@@ -353,30 +348,30 @@ public class AVLTree<E extends Comparable<E>> extends BSTree<E> {
         }
     }
 
-//    public int heightof(E data) throws ExceptionIsEmpty {
-//        if (isEmpty()) {
-//            throw new ExceptionIsEmpty("El árbol está vacío");
-//        }
-//
-//        NodeAVL node = searchBinary((NodeAVL)root, data);
-//        if (node == null) {
-//            return -1; // El nodo no existe
-//        }
-//
-//        return heightRecursive(node);
-//    }
-//
-//    private int heightRecursive(NodeAVL node) {
-//        if (node == null) {
-//            return -1;
-//        }
-//
-//        int leftHeight = heightRecursive((NodeAVL) node.getLeft());
-//
-//        int rightHeight = heightRecursive((NodeAVL) node.getRight());
-//
-//        return Math.max(leftHeight, rightHeight) + 1;
-//    }
+    public int heightof(E data) throws ExceptionIsEmpty {
+        if (isEmpty()) {
+            throw new ExceptionIsEmpty("El árbol está vacío");
+        }
+
+        NodeAVL node = searchBinary((NodeAVL)root, data);
+        if (node == null) {
+            return -1; // El nodo no existe
+        }
+
+        return heightRecursive(node);
+    }
+
+    private int heightRecursive(NodeAVL node) {
+        if (node == null) {
+            return -1;
+        }
+
+        int leftHeight = heightRecursive((NodeAVL) node.getLeft());
+
+        int rightHeight = heightRecursive((NodeAVL) node.getRight());
+
+        return Math.max(leftHeight, rightHeight) + 1;
+    }
 
     @Override
     public E search(E data) throws ItemNotFound {

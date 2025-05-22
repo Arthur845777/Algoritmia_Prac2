@@ -3,14 +3,14 @@ skinparam classAttributeIconSize 0
 skinparam classFontStyle bold
 hide circle
 skinparam classFontSize 14
-'skinparam classFontName "TimesNewRoman"
 
+left to right direction
 
-skinparam class{
-    BackgroundColor LightBlue
-    BorderColor Black
-    BorderThickness 2
-}
+'skinparam class{
+'    BackgroundColor LightBlue
+'    BorderColor Black
+'    BorderThickness 2
+'}
 
 class Usuario {
     - nombre

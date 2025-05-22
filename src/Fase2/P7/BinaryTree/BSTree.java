@@ -225,6 +225,7 @@ public class BSTree<E extends Comparable<E>> implements BinarySearchTree<E> {
         return findMax(node, node.getRight());
     }
 
+
 //------------------------------------------EJERCICIOS-1-------------------------------------------------------
     public void destroyNodes() throws ExceptionIsEmpty{ // a
         if (root == null) {
