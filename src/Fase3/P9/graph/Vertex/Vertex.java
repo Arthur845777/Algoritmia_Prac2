@@ -16,6 +16,10 @@ public class Vertex<E> {
         return data;
     }
 
+    public LinkedList<Edge<E>> getListAdj() {
+        return listAdj;
+    }
+
     public boolean equals(Object o){
         if (o instanceof Vertex<?>) {
             Vertex<E> v = (Vertex<E>) o;

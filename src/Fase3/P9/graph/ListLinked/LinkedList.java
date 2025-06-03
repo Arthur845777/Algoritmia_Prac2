@@ -2,6 +2,7 @@ package Fase3.P9.graph.ListLinked;
 
 public class LinkedList<T> {
     private Node<T> head;
+    private static int countNodes = 0;
 
     public LinkedList() {
         this.head = null;
@@ -55,6 +56,7 @@ public class LinkedList<T> {
         while (NodeCurrent.getNext() != null) {
             if (NodeCurrent.getNext().getData().equals(valor)) {
                 NodeCurrent.setNext(NodeCurrent.getNext().getNext());
+                countNodes--;
                 return true;
             }
             NodeCurrent = NodeCurrent.getNext();
@@ -71,6 +73,7 @@ public class LinkedList<T> {
             newNode.setNext(head);
             head = newNode;
         }
+        countNodes++;
     }
 
     public void insertLast(T valor) {
@@ -84,9 +87,10 @@ public class LinkedList<T> {
             }
             NodeCurrent.setNext(newNode);
         }
+        countNodes++;
     }
 
-    public int countNode(){
+    public int countNode(){ // con la nueva variable statica, esto ya es necesario xd, queria usarlo como indice y recuerdo q no se puede :'v
         if (head == null) {
             return 0;
         } else {

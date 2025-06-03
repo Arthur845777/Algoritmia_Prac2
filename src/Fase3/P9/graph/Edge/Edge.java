@@ -25,6 +25,14 @@ public class Edge<E> {
         return false;
     }
 
+    public Vertex<E> getRefDest() {
+        return refDest;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+
     public String toString(){
         if(this.weight > -1){
             return this.refDest.getData() + " [" + this.weight + "]";
