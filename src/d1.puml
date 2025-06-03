@@ -1,0 +1,26 @@
+@startuml
+title D.C. - Flujo Principal de Configuración de Parámetros del Sistema
+
+skinparam defaultFontName Arial
+skinparam participantPadding 20
+
+actor Administrador as Admin
+boundary UI_Admin_Configuracion as UI_AdminConf
+control Ctrl_Configuracion as CConf
+entity Ent_ConfigSistema as ECS
+
+Admin -- UI_AdminConf : 1. Acceder a configuración
+UI_AdminConf -- CConf : 2. Solicitar configuración actual (parámetro)
+CConf -- ECS : 3. Obtener configuración actual
+ECS -- CConf : 4. Retornar datos de configuración
+CConf -- UI_AdminConf : 5. Mostrar configuración actual
+UI_AdminConf -- Admin : 6. Mostrar configuración al administrador
+
+Admin -- UI_AdminConf : 7. Modificar parámetros y guardar
+UI_AdminConf -- CConf : 8. Actualizar configuración (parámetro, nuevos valores)
+CConf -- ECS : 9. Guardar nueva configuración
+ECS -- CConf : 10. Confirmación de actualización
+CConf -- UI_AdminConf : 11. Confirmar operación exitosa
+UI_AdminConf -- Admin : 12. Mostrar mensaje de confirmación
+
+@enduml
