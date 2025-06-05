@@ -3,7 +3,7 @@ package Fase3.P9.graph.Edge;
 import Fase3.P9.graph.Vertex.Vertex;
 
 public class Edge<E> {
-    private Vertex<E> refDest;
+    private Vertex<E> refDest; // referencia de la arista que le continua
     private int weight;
 
     public Edge(Vertex<E> refDest, int weight) {

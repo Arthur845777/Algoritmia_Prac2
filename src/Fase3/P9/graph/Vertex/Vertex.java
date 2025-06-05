@@ -5,7 +5,7 @@ import Fase3.P9.graph.ListLinked.LinkedList;
 
 public class Vertex<E> {
     private E data;
-    private LinkedList<Edge<E>> listAdj;
+    private LinkedList<Edge<E>> listAdj; // estos son los que siguen - este usa los edge, osea en si el peso y la referencia
 
     public Vertex(E data) {
         this.data = data;

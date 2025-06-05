@@ -6,34 +6,30 @@ import Fase3.P9.graph.ListLinked.Node;
 import Fase3.P9.graph.Vertex.Vertex;
 
 public class GraphLink<E> {
-    protected LinkedList<Vertex<E>> listVertex;
-    protected boolean isDirected; // para permitir los grafos dirigidos o no, igual con la ing, o puede ser bueno o malo
+    protected LinkedList<Vertex<E>> listVertex; // lista de vertices, estos son los que bajan
+    protected boolean isDirected; // dirigido o no
+    protected boolean isWeighted; // peso o no
 
-    public GraphLink() {
-        listVertex = new LinkedList<Vertex<E>>();
-        isDirected = true; // por el momento que sea dirigido nomas o,o
-    }
-
-    public GraphLink(boolean isDirected) { // complementario del directo o no
+    public GraphLink(boolean isDirected, boolean isWeighted) {
         listVertex = new LinkedList<Vertex<E>>();
         isDirected = isDirected;
+        this.isWeighted = isWeighted;
     }
 
     public void insertVertex(E data) {
-        Vertex<E> newVertex = new Vertex<E>(data);
-        // preguntar, aqui creo que tenemos que meter una validacion o metemos el dato nomas?
-        // pondre la validacion entre comillas por siaca, bueno en si es un if o,o
+        if(data == null) {
+            return;
+        }
 
-//        if(listVertex.search(newVertex) == -1){
+        Vertex<E> newVertex = new Vertex<E>(data);
+
+        if(listVertex.search(newVertex) == -1){
             listVertex.insertLast(newVertex);
-//        }
+        }
     }
 
     public void insertEdge(E verOri, E verDes){
         insertEdge(verOri, verDes, -1);
-        // como un por siaca, en caso no tenga peso pss el -1, en caso si
-        // este metodo no trabajaria, aqui es full interfaz, decicion de cual usar
-        // preguntar a la ing
     }
 
     public void insertEdge(E verOri, E verDes, int weight) { // origin ' destiantion
@@ -41,13 +37,21 @@ public class GraphLink<E> {
             return;
         }
 
-        Vertex<E> vertexOri  = new Vertex<E>(verOri);
-        Vertex<E> vertexDes  = new Vertex<E>(verDes);
+        Vertex<E> vertexOri  = findVertex(verOri);
+        Vertex<E> vertexDes  = findVertex(verDes);
 
-        Edge<E> edge = new Edge<E>(vertexDes, weight);
-        vertexOri.getListAdj().insertLast(edge);
+        if(vertexOri == null || vertexDes == null) {
+            return;
+        }
 
-        // igual, preguntar a la ing, aqui va lo del no dirigido, osea registro doble o,o
+        if(isWeighted){ // Aqui el peso esta de mas, es mas, genero redundancia con mi constructor, pero venga, ya vemos como hacerlo
+            Edge<E> edge = new Edge<E>(vertexDes, weight);
+            vertexOri.getListAdj().insertLast(edge);
+        } else {
+            Edge<E> edge = new Edge<E>(vertexDes);
+            vertexOri.getListAdj().insertLast(edge);
+        }
+
         if(!isDirected){
             Edge<E> edgeInverse = new Edge<E>(vertexDes, weight);
             vertexDes.getListAdj().insertLast(edgeInverse);
@@ -74,14 +78,11 @@ public class GraphLink<E> {
             }
             current = current.getNext();
         }
-
         return null;
     }
 
     public boolean searchEdge(E data1, E data2) {
-        // creo q esto no es necesario, el finvertex de por si valida si es un nulo
-        // con la validacion de mas abajito, comprobamos si se puede seguir o no
-        // lo dejare por el momento, preguntar a la ing
+        // si es necesario :v
         if(data1 == null || data2 == null){
             return false;
         }
@@ -95,16 +96,89 @@ public class GraphLink<E> {
 
         boolean found = searchAdjacencyList(vertex1, vertex2);
 
-        if(!isDirected && !found) { // xd, lo mismo nomas, preguntar
+        if(!isDirected && !found) { // xd, lo mismo nomas, preguntar, justificacion, si es necesario ya que puede o no ser directo
             found = searchAdjacencyList(vertex2, vertex1);
         }
 
         return found;
     }
 
+    public boolean removeVertex(E data) { // ya fue ya xd ' re mareado
+        if (data == null) {
+            return false;
+        }
+
+        Vertex<E> vertexToRemove = findVertex(data);
+
+        if (vertexToRemove == null) {
+            return false;
+        }
+
+        if (isDirected) {
+            vertexToRemove.getListAdj().destroyList();
+
+            // me voy a marear horrible xd
+            // aca tomamos la lista de los vertices, esto para entrar a cada uno y poder borrar las referencias
+
+            Node<Vertex<E>> currentVertex = listVertex.getHead();
+
+            while (currentVertex != null) {
+                Vertex<E> edge = currentVertex.getData();
+                Node<Edge<E>> edgeNode = edge.getListAdj().getHead();
+
+                while (edgeNode != null) { // simple, recorremos la lista de aristas hasta hallar el vertice respectivo y borramos
+                    if (edgeNode.getData().getRefDest().equals(vertexToRemove)) {
+                        edge.getListAdj().removeNode(edgeNode.getData());
+                        break;
+                    }
+
+                    edgeNode = edgeNode.getNext();
+                }
+                currentVertex = currentVertex.getNext(); // obvio o,o - el dato puede que no este en un solo vertex, puede q este en varios, razon de la iteracion
+            }
+        } else {
+            Node<Edge<E>> edgeNode = vertexToRemove.getListAdj().getHead();
+
+            while (edgeNode != null) {
+                Vertex<E>  vertexConnected = edgeNode.getData().getRefDest();
+                vertexConnected.getListAdj().removeNode(new Edge<E>(vertexToRemove));
+                edgeNode = edgeNode.getNext();
+
+            }
+        }
+
+        return listVertex.removeNode(vertexToRemove);
+    }
+
+    public boolean removeEdge(E verOri, E verDes) {
+        if (verOri == null || verDes == null) {
+            return false;
+        }
+
+        Vertex<E> vertexOri = findVertex(verOri);
+        Vertex<E> vertexDes = findVertex(verDes);
+
+        if (vertexOri == null || vertexDes == null) {
+            return false;
+        }
+
+        // dirigido ori -> des
+        boolean removed = vertexOri.getListAdj().removeNode(new Edge<>(vertexDes));
+
+        // no dirigido -> eliminar des -> ori
+        if (!isDirected && removed) {
+            vertexDes.getListAdj().removeNode(new Edge<>(vertexOri));
+        }
+
+        return removed;
+
+    }
+
     // aqui no es necesario preguntar, esto si lo veo necesario, es como un metodo extra entre comillas
     private boolean searchAdjacencyList(Vertex<E> item1, Vertex<E> item2) {
+
         LinkedList<Edge<E>> adjList1 = item1.getListAdj();
+
         Node<Edge<E>> current = adjList1.getHead();
 
         while(current != null) {
@@ -114,7 +188,8 @@ public class GraphLink<E> {
             current = current.getNext();
         }
         return false;
-
     }
+
+
 
 }
