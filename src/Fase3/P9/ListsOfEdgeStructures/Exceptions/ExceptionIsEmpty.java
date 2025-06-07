@@ -1,4 +1,4 @@
-package Fase3.P9.Exceptions;
+package Fase3.P9.ListsOfEdgeStructures.Exceptions;
 
 public class ExceptionIsEmpty extends Exception {
 	public ExceptionIsEmpty(String msg){

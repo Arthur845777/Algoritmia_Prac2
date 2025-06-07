@@ -1,9 +1,9 @@
-package Fase3.P9.graph.GraphLink;
+package Fase3.P9.AdjacencyLists.GraphLink;
 
-import Fase3.P9.graph.Edge.Edge;
-import Fase3.P9.graph.ListLinked.LinkedList;
-import Fase3.P9.graph.ListLinked.Node;
-import Fase3.P9.graph.Vertex.Vertex;
+import Fase3.P9.AdjacencyLists.Edge.Edge;
+import Fase3.P9.LinkedList.LinkedList;
+import Fase3.P9.LinkedList.Node;
+import Fase3.P9.AdjacencyLists.Vertex.Vertex;
 
 public class GraphLink<E> {
     protected LinkedList<Vertex<E>> listVertex; // lista de vertices, estos son los que bajan
@@ -23,7 +23,7 @@ public class GraphLink<E> {
 
         Vertex<E> newVertex = new Vertex<E>(data);
 
-        if(listVertex.search(newVertex) == -1){
+        if(!listVertex.search(newVertex)){
             listVertex.insertLast(newVertex);
         }
     }

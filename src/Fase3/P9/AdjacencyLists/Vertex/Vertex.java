@@ -1,7 +1,7 @@
-package Fase3.P9.graph.Vertex;
+package Fase3.P9.AdjacencyLists.Vertex;
 
-import Fase3.P9.graph.Edge.Edge;
-import Fase3.P9.graph.ListLinked.LinkedList;
+import Fase3.P9.AdjacencyLists.Edge.Edge;
+import Fase3.P9.LinkedList.LinkedList;
 
 public class Vertex<E> {
     private E data;

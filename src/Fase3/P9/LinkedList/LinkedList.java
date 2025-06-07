@@ -1,11 +1,12 @@
-package Fase3.P9.graph.ListLinked;
+package Fase3.P9.LinkedList;
 
 public class LinkedList<T> {
     private Node<T> head;
-    private static int countNodes = 0;
+    private int countNodes;
 
     public LinkedList() {
         this.head = null;
+        countNodes = 0;
     }
 
     public boolean isEmpty() {
@@ -13,33 +14,45 @@ public class LinkedList<T> {
     }
 
     public int length() {
-        int cont = 0;
-        for (Node<T> i = head; i != null; i = i.getNext()) {
-            cont++;
-        }
-        return cont;
+        return countNodes;
     }
 
     public void destroyList() {
         head = null;
     }
 
-    public int search(T nodo) {
+//    public int search(T nodo) {
+//        if (head == null) {
+//            return -1;
+//        }
+//
+//        Node<T> NodeCurrent = head;
+//        int cont = 0;
+//
+//        while (NodeCurrent != null) {
+//            if (NodeCurrent.getData().equals(nodo)) {
+//                return cont;
+//            }
+//            NodeCurrent = NodeCurrent.getNext();
+//            cont++;
+//        }
+//        return -1;
+//    }
+
+    public boolean search(T nodo) {
         if (head == null) {
-            return -1;
+            return false;
         }
 
         Node<T> NodeCurrent = head;
-        int cont = 0;
 
         while (NodeCurrent != null) {
             if (NodeCurrent.getData().equals(nodo)) {
-                return cont;
+                return true;
             }
             NodeCurrent = NodeCurrent.getNext();
-            cont++;
         }
-        return -1;
+        return false;
     }
 
     public boolean removeNode(T valor) {
@@ -56,9 +69,10 @@ public class LinkedList<T> {
         while (NodeCurrent.getNext() != null) {
             if (NodeCurrent.getNext().getData().equals(valor)) {
                 NodeCurrent.setNext(NodeCurrent.getNext().getNext());
-                countNodes--;
+                this.countNodes--;
                 return true;
             }
+
             NodeCurrent = NodeCurrent.getNext();
         }
 
@@ -73,7 +87,7 @@ public class LinkedList<T> {
             newNode.setNext(head);
             head = newNode;
         }
-        countNodes++;
+        this.countNodes++;
     }
 
     public void insertLast(T valor) {
@@ -87,21 +101,7 @@ public class LinkedList<T> {
             }
             NodeCurrent.setNext(newNode);
         }
-        countNodes++;
-    }
-
-    public int countNode(){ // con la nueva variable statica, esto ya es necesario xd, queria usarlo como indice y recuerdo q no se puede :'v
-        if (head == null) {
-            return 0;
-        } else {
-            Node<T> nodoCurrent = head;
-            int count = 1;
-            while (nodoCurrent.getNext() != null){
-                nodoCurrent = nodoCurrent.getNext();
-                count++;
-            }
-            return count;
-        }
+        this.countNodes++;
     }
 
     public void reverseLinkedList() {
@@ -142,40 +142,3 @@ public class LinkedList<T> {
         return sb.toString();
     }
 }
-
-
-
-//    public void sortLinkedList(T dato) {
-//        Node<T> newNode = new Node<>(dato);
-//
-//        if (head == null || dato.compareTo(head.getData()) < 0) {
-//            newNode.setNext(head);
-//            head = newNode;
-//        } else {
-//            Node<T> current = head;
-//            while (current.getNext() != null && current.getNext().getData().compareTo(dato) < 0) {
-//                current = current.getNext();
-//            }
-//            newNode.setNext(current.getNext());
-//            current.setNext(newNode);
-//        }
-//    }
-//
-//    public void insertionSort() {
-//        if (head == null || head.getNext() == null) {
-//            return;
-//        }
-//
-//        LinkedList<T> sortedList = new LinkedList<>();
-//
-//        Node<T> nodoCurrent = head;
-//        while (nodoCurrent != null) {
-//            Node<T> next = nodoCurrent.getNext();
-//
-//            sortedList.sortLinkedList(nodoCurrent.getData());
-//
-//            nodoCurrent = next;
-//        }
-//
-//        this.head = sortedList.head;
-//    }

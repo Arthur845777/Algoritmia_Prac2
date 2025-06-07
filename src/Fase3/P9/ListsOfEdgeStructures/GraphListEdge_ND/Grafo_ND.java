@@ -1,11 +1,11 @@
-package Fase3.P9.Tercera.GraphListEdge_ND;
-import Fase3.P9.Exceptions.ExceptionIsEmpty;
-import Fase3.P9.Tercera.LinkedList.*;
+package Fase3.P9.ListsOfEdgeStructures.GraphListEdge_ND;
+import Fase3.P9.ListsOfEdgeStructures.Exceptions.ExceptionIsEmpty;
+import Fase3.P9.LinkedList.*;
 
 public class Grafo_ND<E> {
     protected LinkedList<Vertex<E>> vertices;
     protected LinkedList<Edge<E>> aristas;
-    protected boolean ponderado=false;
+    protected boolean ponderado = false;
 
     public Grafo_ND(boolean ponderado){
         vertices= new LinkedList<>();
@@ -22,11 +22,17 @@ public class Grafo_ND<E> {
         return vertices.search(vertice);
     }
 
+    // estos metodos de busqueda se pueden juntar en uno solo - solucion? un booleano que te diga si es no es o,O xD
+    // osea si es ponderado o no ponderado, maneja la logica de pesos (inicio,fin,peso)
+    // con el bool nos ahorramos lienas de codgio, como quien dice, lo volvemos mas eficiente y no tan pesado o,o
+    // tienes el booleano, explotalo, lo tenes
+    // REVISAR
     public boolean searchEdge_NP(E inicio, E fin){
         Vertex<E> ini = new Vertex<E>(inicio);
         Vertex<E> fi = new Vertex<E>(fin);
         Edge<E> nueva = new Edge<>(ini, fi);
         Node<Edge<E>> current = aristas.getHead();
+
         while(current != null ){
             if(current.getData().equalsDirect_NP(nueva)){
                 return true;
@@ -41,6 +47,7 @@ public class Grafo_ND<E> {
         Vertex<E> fi = new Vertex<E>(fin);
         Edge<E> nueva = new Edge<>(ini, fi,weight);
         Node<Edge<E>> current = aristas.getHead();
+
         while(current != null ){
             if(current.getData().equals(nueva)){
                 return true;
@@ -51,18 +58,26 @@ public class Grafo_ND<E> {
     }
 
     public void insertVertex(E dato){
-        Vertex<E> vertice = new Vertex<E>(dato);
-        if(searchVertex(dato)){ //en caso halla datos repetidos
+        if(dato == null) {
             return;
         }
 
-        if(vertices.isEmpty()){
+        Vertex<E> vertice = new Vertex<E>(dato);
+
+        if(searchVertex(dato)){ //en caso halla datos repetidos esto lo cambio por el bool
+            return;
+        }
+
+        if(vertices.isEmpty()){ // esto es buneo, no es como List de adyacencia, esto maneja otra estructura, esta condicional esta genial
             vertices.insertFirst(vertice);
-        }else{
+        }else{ // creo si se puede borrar, el insertLasst deberia ser capaz de abarcar los 2 casos
             vertices.insertLast(vertice);
         }
     }
 
+    // explota el booleano, estas haciendo codigo de , es lo mismo chicos
+    // hay que explotar mas los boooleanos
+    // checar la =s ultimas condiciones, el insertLast deberia ser capaz de hacer todo eso, abarcar los casos
     public void insertEdge_P(E inicio, E fin, int weight){
         if(!searchVertex(inicio) || !searchVertex(fin)){
             return;
@@ -101,6 +116,7 @@ public class Grafo_ND<E> {
         }
     }
 
+    // aqui es lo que me interesa o,o
     public void bfs(E startVertex) {
         if (!searchVertex(startVertex)) {
             System.out.println("El vértice " + startVertex + " no existe en el grafo");
@@ -259,64 +275,64 @@ public class Grafo_ND<E> {
         return true;
     }
 
-public boolean esRueda() {
-    int numVertices = vertices.length();
-    int numAristas = aristas.length();
-    
-    // Validación rápida: mínimo W₃ (4 vértices), aristas = 2(n-1)
-    if (numVertices < 4 || numAristas != 2 * (numVertices - 1)) {
-        return false;
-    }
-    
-    int verticesBorde = numVertices - 1;
-    int centros = 0;
-    int bordeVertices = 0;
-    
-    Node<Vertex<E>> current = vertices.getHead();
-    while (current != null) {
-        int grado = grado(current.getData().getData());
-        
-        if (grado == verticesBorde) {
-            centros++;
-        } else if (grado == 3) {
-            bordeVertices++;
-        } else {
-            return false; // Grado inválido para rueda
-        }
-        
-        current = current.getNext();
-    }
-    
-    // Debe haber exactamente 1 centro y (n-1) vértices de borde
-    return centros == 1 && bordeVertices == verticesBorde;
-}
+    public boolean esRueda() {
+        int numVertices = vertices.length();
+        int numAristas = aristas.length();
 
-public boolean esCompleto() {
-    int numVertices = vertices.length();
-    int numAristas = aristas.length();
-    
-    // Validación rápida: Kₙ tiene n(n-1)/2 aristas
-    int aristasEsperadas = (numVertices * (numVertices - 1)) / 2;
-    if (numAristas != aristasEsperadas || numVertices < 1) {
-        return false;
-    }
-    
-    // Caso especial: K₁ (un solo vértice)
-    if (numVertices == 1) {
-        return numAristas == 0;
-    }
-    
-    int gradoEsperado = numVertices - 1;
-    
-    // Verificar que todos los vértices tengan grado (n-1)
-    Node<Vertex<E>> current = vertices.getHead();
-    while (current != null) {
-        if (grado(current.getData().getData()) != gradoEsperado) {
+        // Validación rápida: mínimo W₃ (4 vértices), aristas = 2(n-1)
+        if (numVertices < 4 || numAristas != 2 * (numVertices - 1)) {
             return false;
         }
-        current = current.getNext();
+
+        int verticesBorde = numVertices - 1;
+        int centros = 0;
+        int bordeVertices = 0;
+
+        Node<Vertex<E>> current = vertices.getHead();
+        while (current != null) {
+            int grado = grado(current.getData().getData());
+
+            if (grado == verticesBorde) {
+                centros++;
+            } else if (grado == 3) {
+                bordeVertices++;
+            } else {
+                return false; // Grado inválido para rueda
+            }
+
+            current = current.getNext();
+        }
+
+        // Debe haber exactamente 1 centro y (n-1) vértices de borde
+        return centros == 1 && bordeVertices == verticesBorde;
     }
-    
-    return true;
-}
+
+    public boolean esCompleto() {
+        int numVertices = vertices.length();
+        int numAristas = aristas.length();
+
+        // Validación rápida: Kₙ tiene n(n-1)/2 aristas
+        int aristasEsperadas = (numVertices * (numVertices - 1)) / 2;
+        if (numAristas != aristasEsperadas || numVertices < 1) {
+            return false;
+        }
+
+        // Caso especial: K₁ (un solo vértice)
+        if (numVertices == 1) {
+            return numAristas == 0;
+        }
+
+        int gradoEsperado = numVertices - 1;
+
+        // Verificar que todos los vértices tengan grado (n-1)
+        Node<Vertex<E>> current = vertices.getHead();
+        while (current != null) {
+            if (grado(current.getData().getData()) != gradoEsperado) {
+                return false;
+            }
+            current = current.getNext();
+        }
+
+        return true;
+    }
 }

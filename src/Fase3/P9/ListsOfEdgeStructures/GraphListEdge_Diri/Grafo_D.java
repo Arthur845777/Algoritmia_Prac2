@@ -1,11 +1,10 @@
-package Fase3.P9.Tercera.GraphListEdge_Diri;
-import Fase3.P9.Exceptions.ExceptionIsEmpty;
-import Fase3.P9.Tercera.LinkedList.*;
-import Fase3.P9.Tercera.GraphListEdge_ND.*;
+package Fase3.P9.ListsOfEdgeStructures.GraphListEdge_Diri;
+
+import Fase3.P9.ListsOfEdgeStructures.Exceptions.ExceptionIsEmpty;
+import Fase3.P9.LinkedList.*;
+import Fase3.P9.ListsOfEdgeStructures.GraphListEdge_ND.*;
 
 public class Grafo_D<E> extends Grafo_ND<E> {
-
-
     public Grafo_D(boolean ponderado) {
         super(ponderado);
     }

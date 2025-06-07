@@ -1,6 +1,6 @@
-package Fase3.P9.graph.Edge;
+package Fase3.P9.AdjacencyLists.Edge;
 
-import Fase3.P9.graph.Vertex.Vertex;
+import Fase3.P9.AdjacencyLists.Vertex.Vertex;
 
 public class Edge<E> {
     private Vertex<E> refDest; // referencia de la arista que le continua

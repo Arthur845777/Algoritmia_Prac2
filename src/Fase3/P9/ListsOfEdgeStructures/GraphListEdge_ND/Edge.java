@@ -1,25 +1,29 @@
-package Fase3.P9.Tercera.GraphListEdge_ND;
+package Fase3.P9.ListsOfEdgeStructures.GraphListEdge_ND;
 
 public class Edge<V> {
     private Vertex<V> inicio;
     private Vertex<V> fin;
-    private int weight=-1;
+    private int weight = -1;
 
     public Edge(Vertex<V> inicio, Vertex<V> fin, int weight) {
-        this.inicio=inicio;
-        this.fin=fin;
+        this.inicio = inicio;
+        this.fin = fin;
         this.weight = weight;
     }
 
     public Edge(Vertex<V> inicio, Vertex<V> fin) {
-        this.inicio=inicio;
-        this.fin=fin;
+        this.inicio = inicio;
+        this.fin = fin;
     }
 
     @Override
     public boolean equals(Object o){
-        if (this == o) return true;
-        if (o == null ) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null ) {
+            return false;
+        }
 
         if(o instanceof Edge<?>){
             Edge<?> e = (Edge<?>) o;

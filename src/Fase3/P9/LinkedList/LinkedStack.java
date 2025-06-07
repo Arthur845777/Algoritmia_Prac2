@@ -1,6 +1,6 @@
-package Fase3.P9.Tercera.LinkedList;
+package Fase3.P9.LinkedList;
 
-import Fase3.P9.Exceptions.ExceptionIsEmpty;
+import Fase3.P9.ListsOfEdgeStructures.Exceptions.ExceptionIsEmpty;
 
 public class LinkedStack<E> {
     private Node<E> stack;

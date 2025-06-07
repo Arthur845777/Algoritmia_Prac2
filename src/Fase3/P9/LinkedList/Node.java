@@ -1,4 +1,4 @@
-package Fase3.P9.Tercera.LinkedList;
+package Fase3.P9.LinkedList;
 
 public class Node<T> {
 	private T data;
