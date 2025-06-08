@@ -1,5 +1,5 @@
 package Fase3.P9.LinkedList;
-import Fase3.P9.ListsOfEdgeStructures.Exceptions.ExceptionIsEmpty;
+import Fase3.P9.Exceptions.ExceptionIsEmpty;
 
 public class LinkedQueue<E> {
     private Node<E> first;

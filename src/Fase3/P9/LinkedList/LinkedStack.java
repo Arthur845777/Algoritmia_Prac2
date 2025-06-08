@@ -1,23 +1,23 @@
 package Fase3.P9.LinkedList;
 
-import Fase3.P9.ListsOfEdgeStructures.Exceptions.ExceptionIsEmpty;
+import Fase3.P9.Exceptions.ExceptionIsEmpty;
 
 public class LinkedStack<E> {
     private Node<E> stack;
-	private static int counter = 0;
+	private int counter = 0;
 
 	public LinkedStack() {
 		this.stack = null;
 	}
 	
-	public void push(E x) {
+	public void push(E x) { // poner
 		Node<E> newNode = new Node<>(x);
         newNode.setNext(stack);
         stack = newNode;
 		counter++;
 	}
 
-	public E pop() throws ExceptionIsEmpty {
+	public E pop() throws ExceptionIsEmpty { // quitar eliminando
 		if(isEmpty()) {
 			throw new ExceptionIsEmpty();
 		}
@@ -27,7 +27,7 @@ public class LinkedStack<E> {
 		return aux;
 	}
 
-	public E top() throws ExceptionIsEmpty {
+	public E top() throws ExceptionIsEmpty { // retoran sin borrar
 		if(isEmpty()) {
 			throw new ExceptionIsEmpty();
 		}

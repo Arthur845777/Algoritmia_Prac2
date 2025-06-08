@@ -21,23 +21,23 @@ public class LinkedList<T> {
         head = null;
     }
 
-//    public int search(T nodo) {
-//        if (head == null) {
-//            return -1;
-//        }
-//
-//        Node<T> NodeCurrent = head;
-//        int cont = 0;
-//
-//        while (NodeCurrent != null) {
-//            if (NodeCurrent.getData().equals(nodo)) {
-//                return cont;
-//            }
-//            NodeCurrent = NodeCurrent.getNext();
-//            cont++;
-//        }
-//        return -1;
-//    }
+    public int findIndex(T nodo) {
+        if (head == null) {
+            return -1;
+        }
+
+        Node<T> NodeCurrent = head;
+        int cont = 0;
+
+        while (NodeCurrent != null) {
+            if (NodeCurrent.getData().equals(nodo)) {
+                return cont;
+            }
+            NodeCurrent = NodeCurrent.getNext();
+            cont++;
+        }
+        return -1;
+    }
 
     public boolean search(T nodo) {
         if (head == null) {
@@ -53,6 +53,18 @@ public class LinkedList<T> {
             NodeCurrent = NodeCurrent.getNext();
         }
         return false;
+    }
+
+    public T getNodeAtIndex(int index) {
+        if (index < 0 || index >= this.length()) {
+            return null;
+        }
+
+        Node<T> current = head;
+        for (int i = 0; i < index; i++) {
+            current = current.getNext();
+        }
+        return current.getData();
     }
 
     public boolean removeNode(T valor) {

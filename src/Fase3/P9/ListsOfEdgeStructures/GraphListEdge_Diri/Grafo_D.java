@@ -1,6 +1,6 @@
 package Fase3.P9.ListsOfEdgeStructures.GraphListEdge_Diri;
 
-import Fase3.P9.ListsOfEdgeStructures.Exceptions.ExceptionIsEmpty;
+import Fase3.P9.Exceptions.ExceptionIsEmpty;
 import Fase3.P9.LinkedList.*;
 import Fase3.P9.ListsOfEdgeStructures.GraphListEdge_ND.*;
 
@@ -86,18 +86,18 @@ public class Grafo_D<E> extends Grafo_ND<E> {
         }
 
         LinkedList<Vertex<E>> visitados = new LinkedList<>();    
-        LinkedStack<Vertex<E>> pila = new LinkedStack<>();       
+        LinkedStack<Vertex<E>> pila = new LinkedStack<>();
         try {
             Vertex<E> startVertexObj = new Vertex<>(startVertex);
-            pila.push(startVertexObj);         
+            pila.push(startVertexObj);
             System.out.print("Recorrido DFS (Profundidad) desde " + startVertex + ": ");
             while (!pila.isEmpty()) {
                 Vertex<E> verticeActual = pila.pop();
-            
+
                 if (!visitados.search(verticeActual)) {
-                    visitados.insertLast(verticeActual);  
-                    System.out.print(verticeActual.getData() + " ");  
-            
+                    visitados.insertLast(verticeActual);
+                    System.out.print(verticeActual.getData() + " ");
+
                     LinkedList<Vertex<E>> vecinos = getAdjacentVertices(verticeActual);
                     Node<Vertex<E>> current = vecinos.getHead();
                     LinkedStack<Vertex<E>> pilaTemp = new LinkedStack<>();
@@ -113,8 +113,8 @@ public class Grafo_D<E> extends Grafo_ND<E> {
                     }
                 }
             }
-            System.out.println(); 
-    
+            System.out.println();
+
         } catch (ExceptionIsEmpty e) {
             System.out.println("Error en DFS: " + e.getMessage());
         }

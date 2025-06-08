@@ -1,5 +1,5 @@
 package Fase3.P9.ListsOfEdgeStructures.GraphListEdge_ND;
-import Fase3.P9.ListsOfEdgeStructures.Exceptions.ExceptionIsEmpty;
+import Fase3.P9.Exceptions.ExceptionIsEmpty;
 import Fase3.P9.LinkedList.*;
 
 public class Grafo_ND<E> {
