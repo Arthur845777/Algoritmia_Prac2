@@ -46,6 +46,9 @@ public class GraphLink<E> {
         if(vertexOri == null || vertexDes == null) {
             return;
         }
+        if(searchEdge(verOri, verDes, weight)){
+            return;
+        }
 
         if(isWeighted){ // Aqui el peso esta de mas, es mas, genero redundancia con mi constructor, pero venga, ya vemos como hacerlo
             Edge<E> edge = new Edge<E>(vertexDes, weight);
@@ -84,7 +87,7 @@ public class GraphLink<E> {
         return null;
     }
 
-    public boolean searchEdge(E data1, E data2) {
+    public boolean searchEdge(E data1, E data2, int weight) {
         // si es necesario :v
         if(data1 == null || data2 == null){
             return false;
@@ -97,10 +100,10 @@ public class GraphLink<E> {
             return false;
         }
 
-        boolean found = searchAdjacencyList(vertex1, vertex2);
+        boolean found = searchAdjacencyList(vertex1, vertex2, weight);
 
         if(!isDirected && !found) { // xd, lo mismo nomas, preguntar, justificacion, si es necesario ya que puede o no ser directo
-            found = searchAdjacencyList(vertex2, vertex1);
+            found = searchAdjacencyList(vertex2, vertex1, weight);
         }
 
         return found;
@@ -179,14 +182,15 @@ public class GraphLink<E> {
     }
 
     // aqui no es necesario preguntar, esto si lo veo necesario, es como un metodo extra entre comillas
-    private boolean searchAdjacencyList(Vertex<E> item1, Vertex<E> item2) {
+    private boolean searchAdjacencyList(Vertex<E> item1, Vertex<E> item2, int weight) {
 
         LinkedList<Edge<E>> adjList1 = item1.getListAdj();
 
         Node<Edge<E>> current = adjList1.getHead();
 
         while(current != null) {
-            if(current.getData().getRefDest().equals(item2)) {
+            Edge<E> edge = current.getData();
+            if(edge.getRefDest().equals(item2) && edge.getWeight() == weight) {
                 return true;
             }
             current = current.getNext();
@@ -380,9 +384,9 @@ public class GraphLink<E> {
 
         resetVisitedFlags();
         Vertex<E> startVertex = listVertex.getHead().getData();
-        LinkedList<Vertex<E>> visitedVertices = dfsRecursive(startVertex, new LinkedList<Vertex<E>>());
+        LinkedList<Vertex<E>> visitedVertices = dfsRecursive(startVertex, new LinkedList<Vertex<E>>()); // usamos el metodo de exploracion
 
-        return visitedVertices.length() == listVertex.length();
+        return visitedVertices.length() == listVertex.length(); // comparamos con la cantidad total de elementos que tenemos o,o
     }
 
     // Dijsstrack
