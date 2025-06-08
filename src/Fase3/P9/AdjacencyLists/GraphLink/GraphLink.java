@@ -4,6 +4,7 @@ import Fase3.P9.AdjacencyLists.Edge.Edge;
 import Fase3.P9.Exceptions.ExceptionIsEmpty;
 import Fase3.P9.LinkedList.LinkedList;
 import Fase3.P9.LinkedList.LinkedQueue;
+import Fase3.P9.LinkedList.LinkedStack;
 import Fase3.P9.LinkedList.Node;
 import Fase3.P9.AdjacencyLists.Vertex.Vertex;
 
@@ -138,18 +139,19 @@ public class GraphLink<E> {
                 }
                 currentVertex = currentVertex.getNext(); // obvio o,o - el dato puede que no este en un solo vertex, puede q este en varios, razon de la iteracion
             }
+
         } else {
             Node<Edge<E>> edgeNode = vertexToRemove.getListAdj().getHead();
 
             while (edgeNode != null) {
-                Vertex<E>  vertexConnected = edgeNode.getData().getRefDest();
-                vertexConnected.getListAdj().removeNode(new Edge<E>(vertexToRemove));
+                Vertex<E>  vertexConnected = edgeNode.getData().getRefDest(); // aca obtenemos la arista sigueinte
+                vertexConnected.getListAdj().removeNode(new Edge<E>(vertexToRemove)); // aca optenemos la lista de adj en relacion a la arista y borramos
                 edgeNode = edgeNode.getNext();
 
             }
         }
 
-        return listVertex.removeNode(vertexToRemove);
+        return listVertex.removeNode(vertexToRemove); // borramos pe
     }
 
     public boolean removeEdge(E verOri, E verDes) {
@@ -384,7 +386,181 @@ public class GraphLink<E> {
     }
 
     // Dijsstrack
+    public LinkedStack<E> dijkstra(E v, E w) throws ExceptionIsEmpty {
+        // Verificar si los vértices existen
+        Vertex<E> start = findVertex(v);
+        Vertex<E> end = findVertex(w);
 
+        if (start == null || end == null) {
+            return null;
+        }
+
+        resetVisitedFlags();
+
+        // Inicializar estructuras de datos
+        LinkedList<Vertex<E>> vertices = listVertex; // Todos los vértices del grafo
+        LinkedList<Integer> distances = new LinkedList<>();
+        LinkedList<Vertex<E>> previous = new LinkedList<>();
+        LinkedQueue<Vertex<E>> queue = new LinkedQueue<>();
+
+        // Inicialización de distancias y vértices previos
+        Node<Vertex<E>> currentVertex = vertices.getHead();
+        while (currentVertex != null) {
+            Vertex<E> vertex = currentVertex.getData();
+            // Distancia 0 para el inicio, infinito para los demás
+            distances.insertLast(vertex.equals(start) ? 0 : Integer.MAX_VALUE);
+            previous.insertLast(null);
+            queue.enqueue(vertex);
+            currentVertex = currentVertex.getNext();
+        }
+
+        // Algoritmo principal de Dijkstra
+        while (!queue.isEmpty()) {
+            Vertex<E> u = extractMin(queue, distances);
+
+            // Terminar si llegamos al vértice destino
+            if (u.equals(end)) {
+                break;
+            }
+
+            // Explorar todos los vecinos
+            Node<Edge<E>> edgeNode = u.getListAdj().getHead();
+            while (edgeNode != null) {
+                Edge<E> edge = edgeNode.getData();
+                Vertex<E> neighbor = edge.getRefDest();
+                // Calcular nueva distancia alternativa
+                int alt = getDistance(u, distances) + edge.getWeight();
+
+                // Si encontramos un camino mejor, actualizar
+                if (alt < getDistance(neighbor, distances)) {
+                    setDistance(neighbor, distances, alt);
+                    setPrevious(neighbor, previous, u);
+                }
+
+                edgeNode = edgeNode.getNext();
+            }
+        }
+
+        // Reconstruir el camino usando LinkedStack
+        return reconstructPath(start, end, previous);
+    }
+
+    // Método auxiliar para extraer el vértice con menor distancia
+    private Vertex<E> extractMin(LinkedQueue<Vertex<E>> queue, LinkedList<Integer> distances) throws ExceptionIsEmpty {
+        Vertex<E> minVertex = null;
+        int minDistance = Integer.MAX_VALUE;
+        LinkedQueue<Vertex<E>> tempQueue = new LinkedQueue<>();
+
+        while (!queue.isEmpty()) {
+            Vertex<E> current = queue.dequeue();
+            int currentDist = getDistance(current, distances);
+
+            if (currentDist < minDistance) {
+                if (minVertex != null) {
+                    tempQueue.enqueue(minVertex);
+                }
+                minVertex = current;
+                minDistance = currentDist;
+            } else {
+                tempQueue.enqueue(current);
+            }
+        }
+
+        // Devolver los elementos a la cola original
+        while (!tempQueue.isEmpty()) {
+            queue.enqueue(tempQueue.dequeue());
+        }
+
+        return minVertex;
+    }
+
+    // Obtener distancia de un vértice
+    private int getDistance(Vertex<E> v, LinkedList<Integer> distances) {
+        Node<Vertex<E>> vertexNode = listVertex.getHead();
+        Node<Integer> distanceNode = distances.getHead();
+
+        while (vertexNode != null && distanceNode != null) {
+            if (vertexNode.getData().equals(v)) {
+                return distanceNode.getData();
+            }
+            vertexNode = vertexNode.getNext();
+            distanceNode = distanceNode.getNext();
+        }
+        return Integer.MAX_VALUE;
+    }
+
+    // Establecer distancia para un vértice
+    private void setDistance(Vertex<E> v, LinkedList<Integer> distances, int newDistance) {
+        Node<Vertex<E>> vertexNode = listVertex.getHead();
+        Node<Integer> distanceNode = distances.getHead();
+
+        while (vertexNode != null && distanceNode != null) {
+            if (vertexNode.getData().equals(v)) {
+                distanceNode.setData(newDistance);
+                return;
+            }
+            vertexNode = vertexNode.getNext();
+            distanceNode = distanceNode.getNext();
+        }
+    }
+
+    // Establecer vértice previo
+    private void setPrevious(Vertex<E> v, LinkedList<Vertex<E>> previous, Vertex<E> newPrevious) {
+        Node<Vertex<E>> vertexNode = listVertex.getHead();
+        Node<Vertex<E>> previousNode = previous.getHead();
+
+        while (vertexNode != null && previousNode != null) {
+            if (vertexNode.getData().equals(v)) {
+                previousNode.setData(newPrevious);
+                return;
+            }
+            vertexNode = vertexNode.getNext();
+            previousNode = previousNode.getNext();
+        }
+    }
+
+    // Reconstruir el camino usando LinkedStack
+    private LinkedStack<E> reconstructPath(Vertex<E> start, Vertex<E> end, LinkedList<Vertex<E>> previous) {
+        LinkedStack<E> path = new LinkedStack<>();
+        Vertex<E> current = end;
+
+        // Verificar si hay camino
+        if (getPrevious(current, previous) == null && !current.equals(start)) {
+            return null;
+        }
+
+        // Construir el camino desde el final al inicio
+        while (current != null) {
+            path.push(current.getData());
+            current = getPrevious(current, previous);
+        }
+
+        // Verificar que el camino comienza en el vértice de inicio
+        try {
+            if (!path.top().equals(start.getData())) {
+                return null;
+            }
+        } catch (ExceptionIsEmpty e) {
+            return null;
+        }
+
+        return path;
+    }
+
+    // Obtener vértice previo
+    private Vertex<E> getPrevious(Vertex<E> v, LinkedList<Vertex<E>> previous) {
+        Node<Vertex<E>> vertexNode = listVertex.getHead();
+        Node<Vertex<E>> previousNode = previous.getHead();
+
+        while (vertexNode != null && previousNode != null) {
+            if (vertexNode.getData().equals(v)) {
+                return previousNode.getData();
+            }
+            vertexNode = vertexNode.getNext();
+            previousNode = previousNode.getNext();
+        }
+        return null;
+    }
 
 }
 
