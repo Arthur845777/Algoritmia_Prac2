@@ -1,4 +1,4 @@
-package Fase3.P9.ListsOfEdgeStructures.GraphListEdge_ND;
+package Fase3.P9.ListsOfEdgeStructures;
 
 public class Edge<V> {
     private Vertex<V> inicio;
@@ -27,7 +27,9 @@ public class Edge<V> {
 
         if(o instanceof Edge<?>){
             Edge<?> e = (Edge<?>) o;
-            if(this.inicio.equals(e.inicio) && this.fin.equals(e.fin) && this.weight==e.weight) return true;
+            if(this.inicio.equals(e.inicio) && this.fin.equals(e.fin) && this.weight==e.weight) {
+                return true;
+            }
         }
         return false;
     }

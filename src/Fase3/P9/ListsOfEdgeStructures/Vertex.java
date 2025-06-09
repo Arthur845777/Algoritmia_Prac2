@@ -1,4 +1,4 @@
-package Fase3.P9.ListsOfEdgeStructures.GraphListEdge_ND;
+package Fase3.P9.ListsOfEdgeStructures;
 
 public class Vertex<V>{
     protected V data;

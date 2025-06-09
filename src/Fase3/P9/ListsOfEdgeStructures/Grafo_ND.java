@@ -1,20 +1,22 @@
-package Fase3.P9.ListsOfEdgeStructures.GraphListEdge_ND;
+package Fase3.P9.ListsOfEdgeStructures;
 import Fase3.P9.Exceptions.ExceptionIsEmpty;
 import Fase3.P9.LinkedList.*;
 
 public class Grafo_ND<E> {
     protected LinkedList<Vertex<E>> vertices;
     protected LinkedList<Edge<E>> aristas;
-    protected boolean ponderado = false;
+    protected boolean isDirected; // dirigido o no
+    protected boolean isWeighted = false; // peso o no
 
-    public Grafo_ND(boolean ponderado){
-        vertices= new LinkedList<>();
-        aristas= new LinkedList<>();
-        this.ponderado=ponderado;
+    public Grafo_ND(boolean isWeighted, boolean isDirected){
+        vertices = new LinkedList<>();
+        aristas = new LinkedList<>();
+        this.isDirected = isDirected;
+        this.isWeighted = isWeighted;
     }
 
-    public boolean getPonderado(){
-        return ponderado;
+    public boolean getWeighted(){
+        return isWeighted;
     }
 
     public boolean searchVertex(E dato){
@@ -22,34 +24,42 @@ public class Grafo_ND<E> {
         return vertices.search(vertice);
     }
 
-    // estos metodos de busqueda se pueden juntar en uno solo - solucion? un booleano que te diga si es no es o,O xD
-    // osea si es ponderado o no ponderado, maneja la logica de pesos (inicio,fin,peso)
-    // con el bool nos ahorramos lienas de codgio, como quien dice, lo volvemos mas eficiente y no tan pesado o,o
-    // tienes el booleano, explotalo, lo tenes
-    // REVISAR
-    public boolean searchEdge_NP(E inicio, E fin){
-        Vertex<E> ini = new Vertex<E>(inicio);
-        Vertex<E> fi = new Vertex<E>(fin);
-        Edge<E> nueva = new Edge<>(ini, fi);
-        Node<Edge<E>> current = aristas.getHead();
+    private Vertex<E> findVertex(E data) {
+        Node<Vertex<E>> current = vertices.getHead();
 
-        while(current != null ){
-            if(current.getData().equalsDirect_NP(nueva)){
-                return true;
+        while(current != null) {
+            if(current.getData().getData().equals(data)) {
+                return current.getData();
             }
             current = current.getNext();
         }
-        return false;
+        return null;
+    }
+
+    // ya quedo, ahora esta resumido search check
+    public boolean searchEdge_NP(E inicio, E fin){
+        return searchEdge_P(inicio, fin, -1);
     }
 
     public boolean searchEdge_P(E inicio, E fin, int weight){
+        if(inicio == null || fin == null){
+            return false;
+        }
+
         Vertex<E> ini = new Vertex<E>(inicio);
         Vertex<E> fi = new Vertex<E>(fin);
-        Edge<E> nueva = new Edge<>(ini, fi,weight);
+        Edge<E> nueva;
+
+        if(isWeighted){
+            nueva = new Edge<>(ini, fi,weight);
+        } else {
+            nueva = new Edge<>(ini, fi);
+        }
+
         Node<Edge<E>> current = aristas.getHead();
 
         while(current != null ){
-            if(current.getData().equals(nueva)){
+            if(current.getData().equals(nueva)){ // equalsDirect_NP en relacion a esta es lo mismo
                 return true;
             }
             current = current.getNext();
@@ -75,45 +85,41 @@ public class Grafo_ND<E> {
         }
     }
 
-    // explota el booleano, estas haciendo codigo de , es lo mismo chicos
-    // hay que explotar mas los boooleanos
-    // checar la =s ultimas condiciones, el insertLast deberia ser capaz de hacer todo eso, abarcar los casos
+    // ya modificado
+    public void insertEdge_NP(E inicio, E fin){
+        insertEdge_P(inicio, fin, -1);
+    }
+
     public void insertEdge_P(E inicio, E fin, int weight){
-        if(!searchVertex(inicio) || !searchVertex(fin)){
+        if(inicio == null || fin == null){
             return;
         }
 
-        Vertex<E> ini = new Vertex<E>(inicio);
-        Vertex<E> fi = new Vertex<E>(fin);
-        Edge<E> nueva = new Edge<>(ini, fi,weight);
+        Vertex<E> ini = findVertex(inicio);
+        Vertex<E> fi = findVertex(fin);
+
+
+        // ojo, esta condicion cumple para ambos casos, si directo o no
+        // directo -> ya que si no tienen regsitro, lo registra
+        // no directo -> sii encuentra uno, si infiere que el otro tambien
+        // condicion good
         if(searchEdge_P(inicio, fin, weight)){
             return;
         }
-        
-        if(aristas.isEmpty()){
-            aristas.insertFirst(nueva);
-        }else{
-            aristas.insertLast(nueva);
-        }
-        
-    }
 
-    public void insertEdge_NP(E inicio, E fin){
-        if(!searchVertex(inicio) || !searchVertex(fin)){
-            return;
-        }
-        Vertex<E> ini = new Vertex<E>(inicio);
-        Vertex<E> fi = new Vertex<E>(fin);
-        Edge<E> nueva = new Edge<>(ini, fi);
-        if(searchEdge_NP(inicio, fin)){
-            return;
-        }
-        
-        if(aristas.isEmpty()){
-            aristas.insertFirst(nueva);
-        }else{
+        if(isWeighted){
+            Edge<E> nueva = new Edge<>(ini, fi,weight);
+            aristas.insertLast(nueva);
+        } else {
+            Edge<E> nueva = new Edge<>(ini, fi);
             aristas.insertLast(nueva);
         }
+
+        if(!isDirected){
+            Edge<E> nueva = new Edge<>(fi, ini);
+            aristas.insertLast(nueva);
+        }
+
     }
 
     // aqui es lo que me interesa o,o
@@ -122,6 +128,7 @@ public class Grafo_ND<E> {
             System.out.println("El vértice " + startVertex + " no existe en el grafo");
             return;
         }
+
         LinkedList<Vertex<E>> visitados = new LinkedList<>();    
         LinkedQueue<Vertex<E>> cola = new LinkedQueue<>();       
 
@@ -334,5 +341,31 @@ public class Grafo_ND<E> {
         }
 
         return true;
+    }
+
+    public int gradoEntrada(E dato) {
+        Vertex<E> v = new Vertex<>(dato);
+        int count = 0;
+        Node<Edge<E>> current = aristas.getHead();
+        while (current != null) {
+            if (current.getData().getFin().equals(v)) count++;
+            current = current.getNext();
+        }
+        return count;
+    }
+
+    public int gradoSalida(E dato) {
+        Vertex<E> v = new Vertex<>(dato);
+        int count = 0;
+        Node<Edge<E>> current = aristas.getHead();
+        while (current != null) {
+            if (current.getData().getInicio().equals(v)) count++;
+            current = current.getNext();
+        }
+        return count;
+    }
+
+    public int gradoDirigido(E dato) {
+        return gradoSalida(dato) + gradoEntrada(dato);
     }
 }
