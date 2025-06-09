@@ -566,6 +566,17 @@ public class GraphLink<E> {
         return null;
     }
 
+    public int gradoNodo(E data) { // entiendo que es la cantidad de nodos conectados
+        Vertex<E> vertex = findVertex(data);
+        if (vertex == null) {
+            return -1;
+        }
+
+        return vertex.getListAdj().length();
+    }
+
+
+
 }
 
 //    // metodos DFS - amplitud
