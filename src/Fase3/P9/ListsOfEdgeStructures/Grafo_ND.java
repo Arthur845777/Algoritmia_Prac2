@@ -122,6 +122,63 @@ public class Grafo_ND<E> {
 
     }
 
+    public boolean removeEdge(E origen, E destino) {
+        if (origen == null || destino == null) {
+            return false;
+        }
+
+        Vertex<E> verticeOrigen = findVertex(origen);
+        Vertex<E> verticeDestino = findVertex(destino);
+
+        if (verticeOrigen == null || verticeDestino == null) {
+            return false;
+        }
+
+        Edge<E> arista = new Edge<>(verticeOrigen, verticeDestino);
+        boolean eliminado =  aristas.removeNode(arista);
+
+        if (!isDirected && eliminado) {
+            Edge<E> aristaInversa = new Edge<>(verticeDestino, verticeOrigen);
+            eliminado = eliminado || aristas.removeNode(aristaInversa);
+        }
+
+        return eliminado;
+    }
+
+    public boolean removeVertex(E dato) {
+        if (dato == null) {
+            return false;
+        }
+
+        Vertex<E> vertice = findVertex(dato);
+
+        if (vertice == null) {
+            return false;
+        }
+
+        Node<Edge<E>> current = aristas.getHead();
+        LinkedList<Edge<E>> aristasAEliminar = new LinkedList<>();
+
+        while (current != null) {
+            Edge<E> arista = current.getData();
+            if (arista.contiene(vertice)) {
+                aristasAEliminar.insertLast(arista);
+            }
+            current = current.getNext();
+        }
+
+        Node<Edge<E>> aristaAEliminar = aristasAEliminar.getHead();
+
+        while (aristaAEliminar != null) {
+            aristas.removeNode(aristaAEliminar.getData());
+            aristaAEliminar = aristaAEliminar.getNext();
+        }
+
+        return vertices.removeNode(vertice);
+    }
+
+
+
     public void dfs(E startVertex) {
         if (!searchVertex(startVertex)) return;
 

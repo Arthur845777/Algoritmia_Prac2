@@ -174,7 +174,7 @@ public class GraphLink<E> {
 
         // no dirigido -> eliminar des -> ori
         if (!isDirected && removed) {
-            vertexDes.getListAdj().removeNode(new Edge<>(vertexOri));
+            removed = removed || vertexDes.getListAdj().removeNode(new Edge<>(vertexOri));
         }
 
         return removed;
