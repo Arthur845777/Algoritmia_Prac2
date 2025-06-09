@@ -374,4 +374,134 @@ public class Grafo_ND<E> {
         return true;
     }
 
+    // todo isomorfo:
+    public boolean isIsomorfo(Grafo_ND<E> otroGrafo) {
+        // Verificación básica de tamaños
+        if (this.vertices.length() != otroGrafo.vertices.length() ||
+                this.aristas.length() != otroGrafo.aristas.length()) {
+            return false;
+        }
+
+        // Obtener secuencias de grados de ambos grafos
+        LinkedList<Integer> gradosThis = obtenerSecuenciaGrados();
+        LinkedList<Integer> gradosOtro = otroGrafo.obtenerSecuenciaGrados();
+
+        // Ordenar ambas listas
+        gradosThis = ordenarListaGrados(gradosThis);
+        gradosOtro = ordenarListaGrados(gradosOtro);
+
+        // Comparar las listas ordenadas
+        return listasIguales(gradosThis, gradosOtro);
+    }
+
+    private LinkedList<Integer> obtenerSecuenciaGrados() {
+        LinkedList<Integer> grados = new LinkedList<>();
+        Node<Vertex<E>> current = vertices.getHead();
+        while (current != null) {
+            grados.insertLast(grado(current.getData().getData()));
+            current = current.getNext();
+        }
+        return grados;
+    }
+
+    private LinkedList<Integer> ordenarListaGrados(LinkedList<Integer> lista) {
+        // Implementación de ordenación burbuja para listas enlazadas
+        boolean swapped;
+        do {
+            swapped = false;
+            Node<Integer> current = lista.getHead();
+            while (current != null && current.getNext() != null) {
+                if (current.getData() > current.getNext().getData()) {
+                    // Intercambiar valores
+                    int temp = current.getData();
+                    current.setData(current.getNext().getData());
+                    current.getNext().setData(temp);
+                    swapped = true;
+                }
+                current = current.getNext();
+            }
+        } while (swapped);
+        return lista;
+    }
+
+    private boolean listasIguales(LinkedList<Integer> lista1, LinkedList<Integer> lista2) {
+        if (lista1.length() != lista2.length()) return false;
+
+        Node<Integer> node1 = lista1.getHead();
+        Node<Integer> node2 = lista2.getHead();
+
+        while (node1 != null && node2 != null) {
+            if (!node1.getData().equals(node2.getData())) {
+                return false;
+            }
+            node1 = node1.getNext();
+            node2 = node2.getNext();
+        }
+
+        return true;
+    }
+
+    // todo plano
+    public boolean esPlano() {
+        // Verificación usando fórmula de Euler para grafos conexos planos: V - E + F = 2
+        try {
+            if (!this.esConexo()) return false;
+        } catch (ExceptionIsEmpty e) {
+            return false;
+        }
+
+        int V = vertices.length();
+        int E = aristas.length();
+
+        // Para grafos simples conexos planos con V >= 3
+        if (V >= 3 && E > 3 * V - 6) {
+            return false;
+        }
+
+        // Verificación adicional sin usar arrays
+        // Contar caras (F) usando la fórmula de Euler
+        // F = 2 - V + E (para grafos conexos planos)
+        int F = 2 - V + E;
+
+        // Debe haber al menos una cara (la exterior)
+        return F >= 1;
+    }
+
+    // todo auto complementario
+    public boolean esAutoComplementario() {
+        // Crear el grafo complemento
+        Grafo_ND<E> complemento = new Grafo_ND<>(false, false);
+
+        // Insertar todos los vértices
+        Node<Vertex<E>> vertexNode = vertices.getHead();
+        while (vertexNode != null) {
+            complemento.insertVertex(vertexNode.getData().getData());
+            vertexNode = vertexNode.getNext();
+        }
+
+        // Insertar aristas que no están en el grafo original
+        Node<Vertex<E>> current = vertices.getHead();
+        while (current != null) {
+            Vertex<E> v1 = current.getData();
+            Node<Vertex<E>> next = current.getNext();
+
+            while (next != null) {
+                Vertex<E> v2 = next.getData();
+                E dato1 = v1.getData();
+                E dato2 = v2.getData();
+
+                if (!this.searchEdge_NP(dato1, dato2)) {
+                    complemento.insertEdge_NP(dato1, dato2);
+                }
+
+                next = next.getNext();
+            }
+
+            current = current.getNext();
+        }
+
+        // Verificar isomorfismo entre el grafo original y su complemento
+        return this.isIsomorfo(complemento);
+    }
+
 }
