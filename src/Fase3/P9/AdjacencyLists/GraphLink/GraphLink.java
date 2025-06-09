@@ -198,7 +198,7 @@ public class GraphLink<E> {
         return false;
     }
 
-    public void dfs(E data) throws ExceptionIsEmpty { // comentado - no recursivo
+    public void dfs(E data) throws ExceptionIsEmpty {
         if (data == null) {
             return;
         }

@@ -6,7 +6,7 @@ public class Grafo_ND<E> {
     protected LinkedList<Vertex<E>> vertices;
     protected LinkedList<Edge<E>> aristas;
     protected boolean isDirected; // dirigido o no
-    protected boolean isWeighted = false; // peso o no
+    protected boolean isWeighted; // peso o no
 
     public Grafo_ND(boolean isWeighted, boolean isDirected){
         vertices = new LinkedList<>();
@@ -122,102 +122,78 @@ public class Grafo_ND<E> {
 
     }
 
-    // aqui es lo que me interesa o,o
-    public void bfs(E startVertex) {
-        if (!searchVertex(startVertex)) {
-            System.out.println("El vértice " + startVertex + " no existe en el grafo");
-            return;
-        }
-
-        LinkedList<Vertex<E>> visitados = new LinkedList<>();    
-        LinkedQueue<Vertex<E>> cola = new LinkedQueue<>();       
-
-        try {
-            Vertex<E> startVertexObj = new Vertex<>(startVertex);
-            visitados.insertLast(startVertexObj);  
-            cola.enqueue(startVertexObj);          
-            System.out.print("Recorrido BFS (Amplitud) desde " + startVertex + ": ");
-            while (!cola.isEmpty()) {
-                Vertex<E> verticeActual = cola.dequeue();
-                System.out.print(verticeActual.getData() + " "); 
-                LinkedList<Vertex<E>> vecinos = getAdjacentVertices(verticeActual);
-                Node<Vertex<E>> current = vecinos.getHead();
-                while (current != null) {
-                    Vertex<E> vecino = current.getData();
-                    if (!visitados.search(vecino)) {
-                        visitados.insertLast(vecino);  
-                        cola.enqueue(vecino);        
-                    }
-                    current = current.getNext();
-                }
-            }
-            System.out.println(); 
-    
-        } catch (ExceptionIsEmpty e) {
-            System.out.println("Error en BFS: " + e.getMessage());
-        }
-    }
-
-    private LinkedList<Vertex<E>> getAdjacentVertices(Vertex<E> vertex) {
-        LinkedList<Vertex<E>> adyacentes = new LinkedList<>();
-
-        Node<Edge<E>> current = aristas.getHead();
-        while (current != null) {
-            Edge<E> arista = current.getData();
-            if (arista.getInicio().equals(vertex)) {
-                Vertex<E> adyacente = arista.getFin();
-                if (!adyacentes.search(adyacente)) {
-                    adyacentes.insertLast(adyacente);
-                }
-            } else if (arista.getFin().equals(vertex)) {
-                Vertex<E> adyacente = arista.getInicio();
-                if (!adyacentes.search(adyacente)) {
-                    adyacentes.insertLast(adyacente);
-                }
-            }
-            current = current.getNext();
-        }
-        return adyacentes;
-    }
-
     public void dfs(E startVertex) {
-        if (!searchVertex(startVertex)) {
-            System.out.println("El vértice " + startVertex + " no existe en el grafo");
-            return;
-        }
+        if (!searchVertex(startVertex)) return;
 
-        LinkedList<Vertex<E>> visitados = new LinkedList<>();    
-        LinkedStack<Vertex<E>> pila = new LinkedStack<>();       
-        try {
-            Vertex<E> startVertexObj = new Vertex<>(startVertex);
-            pila.push(startVertexObj);         
-            System.out.print("Recorrido DFS (Profundidad) desde " + startVertex + ": ");
-            while (!pila.isEmpty()) {
-                Vertex<E> verticeActual = pila.pop();
-            
-                if (!visitados.search(verticeActual)) {
-                    visitados.insertLast(verticeActual);  
-                    System.out.print(verticeActual.getData() + " ");  
-            
-                    LinkedList<Vertex<E>> vecinos = getAdjacentVertices(verticeActual);
-                    Node<Vertex<E>> current = vecinos.getHead();
-                    LinkedStack<Vertex<E>> pilaTemp = new LinkedStack<>();
-                    while (current != null) {
-                        Vertex<E> vecino = current.getData();
-                        if (!visitados.search(vecino)) {
-                            pilaTemp.push(vecino);
-                        }
-                        current = current.getNext();
-                    }
-                    while (!pilaTemp.isEmpty()) {
-                        pila.push(pilaTemp.pop());
-                    }
-                }
+        resetVisitedFlags();
+        dfsRecursive(findVertex(startVertex));
+        System.out.println();
+    }
+
+    private void dfsRecursive(Vertex<E> current) {
+        current.setVisited(true);
+        System.out.print(current.getData() + " "); // Procesar vértice
+
+        Node<Edge<E>> edgeNode = aristas.getHead();
+        while (edgeNode != null) {
+            Edge<E> edge = edgeNode.getData();
+            Vertex<E> neighbor = null;
+
+            if (edge.getInicio().equals(current) && !edge.getFin().isVisited()) {
+                neighbor = edge.getFin();
+            } else if (!isDirected && edge.getFin().equals(current) && !edge.getInicio().isVisited()) {
+                neighbor = edge.getInicio();
             }
-            System.out.println(); 
-    
-        } catch (ExceptionIsEmpty e) {
-            System.out.println("Error en DFS: " + e.getMessage());
+
+            if (neighbor != null) {
+                dfsRecursive(neighbor);
+            }
+            edgeNode = edgeNode.getNext();
+        }
+    }
+
+    public void bfs(E startVertex) throws ExceptionIsEmpty {
+        if (!searchVertex(startVertex)) return;
+
+        resetVisitedFlags();
+        LinkedQueue<Vertex<E>> cola = new LinkedQueue<>();
+        Vertex<E> inicio = findVertex(startVertex);
+
+        inicio.setVisited(true);
+        cola.enqueue(inicio);
+
+        System.out.print("BFS: ");
+
+        while (!cola.isEmpty()) {
+            Vertex<E> actual = cola.dequeue();
+            System.out.print(actual.getData() + " ");
+
+            Node<Edge<E>> edgeNode = aristas.getHead();
+            while (edgeNode != null) {
+                Edge<E> edge = edgeNode.getData();
+                Vertex<E> vecino = null;
+
+                if (edge.getInicio().equals(actual) && !edge.getFin().isVisited()) {
+                    vecino = edge.getFin();
+                } else if (!isDirected && edge.getFin().equals(actual) && !edge.getInicio().isVisited()) {
+                    vecino = edge.getInicio();
+                }
+
+                if (vecino != null) {
+                    vecino.setVisited(true);
+                    cola.enqueue(vecino);
+                }
+                edgeNode = edgeNode.getNext();
+            }
+        }
+        System.out.println();
+    }
+
+    private void resetVisitedFlags() {
+        Node<Vertex<E>> current = vertices.getHead();
+        while (current != null) {
+            current.getData().setVisited(false);
+            current = current.getNext();
         }
     }
 
@@ -235,42 +211,76 @@ public class Grafo_ND<E> {
         return count;
     }
 
-    public boolean esCamino() {
-        int numVertices = vertices.length();
-        int numAristas = aristas.length();
-    
-        if (numAristas != numVertices - 1) {
-            return false;
-        }
-        int gradoUno = 0;
-        int gradoDos = 0;
-    
-        Node<Vertex<E>> current = vertices.getHead();
-        while (current != null) {
-            E dato = current.getData().getData();
-            int grado = grado(dato);
-        
-            if (grado == 1) {
-                gradoUno++;
-            } else if (grado == 2) {
-                gradoDos++;
-            } else {
-                return false; 
+    public boolean esConexo() throws ExceptionIsEmpty {
+        if (vertices.isEmpty()) return true; // Grafo vacío se considera conexo
+
+        resetVisitedFlags();
+        LinkedQueue<Vertex<E>> cola = new LinkedQueue<>();
+        int verticesVisitados = 0;
+
+        // Empezamos desde el primer vértice disponible
+        Vertex<E> inicio = vertices.getHead().getData();
+        inicio.setVisited(true);
+        cola.enqueue(inicio);
+        verticesVisitados++;
+
+        while (!cola.isEmpty()) {
+            Vertex<E> actual = cola.dequeue();
+            LinkedList<Vertex<E>> vecinos = getAdjacentVertices(actual);
+            Node<Vertex<E>> vecinoNode = vecinos.getHead();
+
+            while (vecinoNode != null) {
+                Vertex<E> vecino = vecinoNode.getData();
+                if (!vecino.isVisited()) {
+                    vecino.setVisited(true);
+                    cola.enqueue(vecino);
+                    verticesVisitados++;
+                }
+                vecinoNode = vecinoNode.getNext();
             }
-        
-            current = current.getNext();
         }
-        return gradoUno == 2 && gradoDos == (numVertices - 2);
+
+        return verticesVisitados == vertices.length();
     }
 
-    public boolean esCiclo() {
-        int numVertices = vertices.length();  
-        int numAristas = aristas.length();
-    
-        if (numAristas != numVertices || numVertices < 3) {
+    public boolean esCamino() throws ExceptionIsEmpty {
+        int numVertices = vertices.length();
+
+        if (numVertices == 0) {
             return false;
         }
-    
+
+        if (aristas.length() != numVertices - 1) {
+            return false;
+        }
+
+        int verticesGrado1 = 0;
+
+        Node<Vertex<E>> current = vertices.getHead();
+
+        while (current != null) {
+            int gradoActual = grado(current.getData().getData());
+
+            if (gradoActual == 1) {
+                verticesGrado1++;
+            } else if (gradoActual != 2) {
+                return false;
+            }
+
+            current = current.getNext();
+        }
+
+        return verticesGrado1 == 2 && esConexo();
+    }
+
+    public boolean esCiclo() throws ExceptionIsEmpty {
+        int numVertices = vertices.length();
+        if (numVertices < 3) return false;
+
+        if (aristas.length() != numVertices) {
+            return false;
+        }
+
         Node<Vertex<E>> current = vertices.getHead();
         while (current != null) {
             if (grado(current.getData().getData()) != 2) {
@@ -278,60 +288,81 @@ public class Grafo_ND<E> {
             }
             current = current.getNext();
         }
-    
-        return true;
+
+        return esConexo();
     }
 
-    public boolean esRueda() {
-        int numVertices = vertices.length();
-        int numAristas = aristas.length();
+    private LinkedList<Vertex<E>> getAdjacentVertices(Vertex<E> vertex) {
+        LinkedList<Vertex<E>> adyacentes = new LinkedList<>();
+        Node<Edge<E>> current = aristas.getHead();
 
-        // Validación rápida: mínimo W₃ (4 vértices), aristas = 2(n-1)
-        if (numVertices < 4 || numAristas != 2 * (numVertices - 1)) {
+        while (current != null) {
+            Edge<E> arista = current.getData();
+            if (arista.getInicio().equals(vertex)) {
+                adyacentes.insertLast(arista.getFin());
+            }
+            else if (!isDirected && arista.getFin().equals(vertex)) {
+                adyacentes.insertLast(arista.getInicio());
+            }
+            current = current.getNext();
+        }
+        return adyacentes;
+    }
+
+    public boolean esRueda() throws ExceptionIsEmpty {
+        int numVertices = vertices.length();
+
+        // Una rueda debe tener al menos 4 vértices (W₃)
+        if (numVertices < 4 || !this.esConexo()) {
             return false;
         }
 
-        int verticesBorde = numVertices - 1;
-        int centros = 0;
-        int bordeVertices = 0;
+        // Contadores para vértices centrales y de borde
+        int centroCount = 0;
+        int bordeCount = 0;
+        int gradoEsperadoCentro = numVertices - 1;
+        int gradoEsperadoBorde = 3; // Los vértices de borde están conectados al centro y a 2 vecinos
 
         Node<Vertex<E>> current = vertices.getHead();
         while (current != null) {
-            int grado = grado(current.getData().getData());
+            int gradoActual = grado(current.getData().getData());
 
-            if (grado == verticesBorde) {
-                centros++;
-            } else if (grado == 3) {
-                bordeVertices++;
+            if (gradoActual == gradoEsperadoCentro) {
+                centroCount++;
+            } else if (gradoActual == gradoEsperadoBorde) {
+                bordeCount++;
             } else {
-                return false; // Grado inválido para rueda
+                return false; // Grado no coincide con rueda
             }
 
             current = current.getNext();
         }
 
         // Debe haber exactamente 1 centro y (n-1) vértices de borde
-        return centros == 1 && bordeVertices == verticesBorde;
+        return centroCount == 1 && bordeCount == numVertices - 1;
     }
 
     public boolean esCompleto() {
         int numVertices = vertices.length();
-        int numAristas = aristas.length();
 
-        // Validación rápida: Kₙ tiene n(n-1)/2 aristas
-        int aristasEsperadas = (numVertices * (numVertices - 1)) / 2;
-        if (numAristas != aristasEsperadas || numVertices < 1) {
+        // Grafo completo debe tener al menos 1 vértice
+        if (numVertices < 1) {
             return false;
         }
 
-        // Caso especial: K₁ (un solo vértice)
+        // Caso especial: K₁ (un solo vértice sin aristas)
         if (numVertices == 1) {
-            return numAristas == 0;
+            return aristas.length() == 0;
         }
 
-        int gradoEsperado = numVertices - 1;
+        // Para Kₙ, número de aristas debe ser n(n-1)/2 (no dirigido)
+        int aristasEsperadas = numVertices * (numVertices - 1) / 2;
+        if (aristas.length() != aristasEsperadas) {
+            return false;
+        }
 
-        // Verificar que todos los vértices tengan grado (n-1)
+        // Todos los vértices deben tener grado (n-1)
+        int gradoEsperado = numVertices - 1;
         Node<Vertex<E>> current = vertices.getHead();
         while (current != null) {
             if (grado(current.getData().getData()) != gradoEsperado) {
@@ -343,29 +374,4 @@ public class Grafo_ND<E> {
         return true;
     }
 
-    public int gradoEntrada(E dato) {
-        Vertex<E> v = new Vertex<>(dato);
-        int count = 0;
-        Node<Edge<E>> current = aristas.getHead();
-        while (current != null) {
-            if (current.getData().getFin().equals(v)) count++;
-            current = current.getNext();
-        }
-        return count;
-    }
-
-    public int gradoSalida(E dato) {
-        Vertex<E> v = new Vertex<>(dato);
-        int count = 0;
-        Node<Edge<E>> current = aristas.getHead();
-        while (current != null) {
-            if (current.getData().getInicio().equals(v)) count++;
-            current = current.getNext();
-        }
-        return count;
-    }
-
-    public int gradoDirigido(E dato) {
-        return gradoSalida(dato) + gradoEntrada(dato);
-    }
 }

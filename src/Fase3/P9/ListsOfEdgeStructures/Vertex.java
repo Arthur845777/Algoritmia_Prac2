@@ -1,10 +1,14 @@
 package Fase3.P9.ListsOfEdgeStructures;
 
+import java.util.Objects;
+
 public class Vertex<V>{
     protected V data;
+    protected boolean visited;
 
     public Vertex(V data){
         this.data = data;
+        this.visited = false;
     }
 
     public V getData() {
@@ -15,16 +19,26 @@ public class Vertex<V>{
         this.data = data;
     }
 
+    public boolean isVisited() {
+        return visited;
+    }
+
+    public void setVisited(boolean visited) {
+        this.visited = visited;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true; 
+        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Vertex<?> vertex = (Vertex<?>) o;
-        if(this.data.equals(vertex.data)){
-            return true;
-        }
-        return false;
+        return data.equals(vertex.data);
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(data);
+    }
+
 
 }
