@@ -575,7 +575,138 @@ public class GraphLink<E> {
         return vertex.getListAdj().length();
     }
 
+    public boolean esCamino(LinkedList<E> nodos) { // camion es, juntar todos los nodos pero sin el incio o el final
+        if (nodos == null || nodos.length() < 2) {
+            return false;
+        }
 
+        Node<E> current = nodos.getHead();
+        Node<E> next = current.getNext();
+
+        while (next != null) {
+            Vertex<E> v1 = findVertex(current.getData());
+            Vertex<E> v2 = findVertex(next.getData());
+
+            if (v1 == null || v2 == null || !sonAdyacentes(v1, v2)) {
+                return false;
+            }
+
+            current = next;
+            next = next.getNext();
+        }
+
+        E primero = nodos.getNodeAtIndex(0);
+        E ultimo = nodos.getNodeAtIndex(nodos.length() - 1);
+        return !primero.equals(ultimo);
+
+    }
+
+    private boolean sonAdyacentes(Vertex<E> v1, Vertex<E> v2) { // solo valida si es o no es o,O
+        Node<Edge<E>> edgeNode = v1.getListAdj().getHead();
+        while (edgeNode != null) {
+            if (edgeNode.getData().getRefDest().equals(v2)) {
+                return true;
+            }
+            edgeNode = edgeNode.getNext();
+        }
+        return false;
+    }
+
+    public boolean esCiclo(LinkedList<E> nodos) {
+        if (!esCamino(nodos) || nodos.length() < 3) { // Vemos si es camino, si lo es F, no sera ciclo
+            return false;
+        }
+
+        E primero = nodos.getNodeAtIndex(0);
+        E ultimo = nodos.getNodeAtIndex(nodos.length() - 1);
+
+        if (!primero.equals(ultimo)) {
+            return false;
+        }
+
+        LinkedList<E> nodosIntermedios = new LinkedList<>();
+        for (int i = 1; i < nodos.length() - 1; i++) {
+            E nodo = nodos.getNodeAtIndex(i);
+
+            if (nodosIntermedios.search(nodo)) {
+                return false;
+            }
+            nodosIntermedios.insertLast(nodo);
+        }
+
+        return true;
+    }
+
+    public boolean esRueda(LinkedList<E> nodos) {
+        if (nodos == null || nodos.length() < 4) {
+            return false;
+        }
+
+        Vertex<E> centro = null;
+        int n = nodos.length();
+
+        Node<E> current = nodos.getHead();
+        while (current != null) {
+            Vertex<E> v = findVertex(current.getData());
+            if (v != null && gradoNodo(v.getData()) == n - 1) {
+                centro = v;
+                break;
+            }
+            current = current.getNext();
+        }
+
+        if (centro == null) {
+            return false;
+        }
+
+        LinkedList<E> nodosCiclo = new LinkedList<>();
+        current = nodos.getHead();
+        while (current != null) {
+            if (!current.getData().equals(centro.getData())) {
+                nodosCiclo.insertLast(current.getData());
+            }
+            current = current.getNext();
+        }
+
+        return esCiclo(nodosCiclo);
+    }
+
+    public boolean esCompleto() {
+        int n = listVertex.length();
+        if (n == 0) {
+            return true;
+        }
+
+        Node<Vertex<E>> current = listVertex.getHead();
+        while (current != null) {
+            Vertex<E> v1 = current.getData();
+            Node<Vertex<E>> other = listVertex.getHead();
+
+            while (other != null) {
+                Vertex<E> v2 = other.getData();
+                if (!v1.equals(v2)) {
+                    if (!sonAdyacentes(v1, v2) || (isDirected && !sonAdyacentes(v2, v1))) {
+                        return false;
+                    }
+                }
+                other = other.getNext();
+            }
+            current = current.getNext();
+        }
+
+        return true;
+    }
+
+    public LinkedList<E> getVertices() {
+        LinkedList<E> vertices = new LinkedList<>();
+        Node<Vertex<E>> current = listVertex.getHead();
+
+        while (current != null) {
+            vertices.insertLast(current.getData().getData());
+            current = current.getNext();
+        }
+        return vertices;
+    }
 
 }
 
