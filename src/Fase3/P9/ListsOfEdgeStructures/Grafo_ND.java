@@ -209,6 +209,7 @@ public class Grafo_ND<E> {
         }
     }
 
+
     public void bfs(E startVertex) throws ExceptionIsEmpty {
         if (!searchVertex(startVertex)) return;
 
@@ -499,28 +500,21 @@ public class Grafo_ND<E> {
     }
 
     // todo plano
-    public boolean esPlano() {
-        // Verificación usando fórmula de Euler para grafos conexos planos: V - E + F = 2
-        try {
-            if (!this.esConexo()) return false;
-        } catch (ExceptionIsEmpty e) {
+    public boolean esPlano() throws ExceptionIsEmpty {
+
+        if (!this.esConexo()) {
             return false;
         }
 
         int V = vertices.length();
         int E = aristas.length();
 
-        // Para grafos simples conexos planos con V >= 3
         if (V >= 3 && E > 3 * V - 6) {
             return false;
         }
 
-        // Verificación adicional sin usar arrays
-        // Contar caras (F) usando la fórmula de Euler
-        // F = 2 - V + E (para grafos conexos planos)
         int F = 2 - V + E;
 
-        // Debe haber al menos una cara (la exterior)
         return F >= 1;
     }
 
@@ -557,7 +551,6 @@ public class Grafo_ND<E> {
             current = current.getNext();
         }
 
-        // Verificar isomorfismo entre el grafo original y su complemento
         return this.isIsomorfo(complemento);
     }
 

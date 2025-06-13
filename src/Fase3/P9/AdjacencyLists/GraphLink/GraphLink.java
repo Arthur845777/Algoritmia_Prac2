@@ -229,7 +229,7 @@ public class GraphLink<E> {
             Vertex<E> neighbor = edgeNode.getData().getRefDest();
 
             if (!neighbor.isVisited()) {
-                neighbor.setVisited(true);
+                neighbor.setVisited(true); // me siento seguro uwu - se que esta por las webas pero me siento seguro :p
                 dfsRecursive(neighbor, visitedList); // Llamada recursiva
             }
             edgeNode = edgeNode.getNext();
@@ -285,7 +285,7 @@ public class GraphLink<E> {
     }
 
 
-    public LinkedList<E> bfsPath(E v, E z) { // repasar al mill millones por ciento
+    public LinkedList<E> bfsPath(E v, E z) throws ExceptionIsEmpty { // repasar al mill millones por ciento
         Vertex<E> start = findVertex(v);
         Vertex<E> end = findVertex(z);
         if (start == null || end == null) {
@@ -307,13 +307,9 @@ public class GraphLink<E> {
 
         while (!queue.isEmpty() && !found) {
             Vertex<E> current;
-            try {
-                current = queue.dequeue();
-            } catch (ExceptionIsEmpty e) {
-                break;
-            }
 
-            // Si llegamos al destino
+            current = queue.dequeue();
+
             if (current.equals(end)) {
                 found = true;
                 break;
@@ -332,6 +328,7 @@ public class GraphLink<E> {
                     vertices.insertLast(neighbor);
                     parents.insertLast(current);
                 }
+
                 edgeNode = edgeNode.getNext();
             }
         }
@@ -373,7 +370,7 @@ public class GraphLink<E> {
         return null;
     }
 
-    public LinkedList<E> shortPath(E v, E z) {
+    public LinkedList<E> shortPath(E v, E z) throws ExceptionIsEmpty {
         return bfsPath(v, z); // En grafos no ponderados, BFS ya da el camino más corto
     }
 
