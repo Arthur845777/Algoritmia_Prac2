@@ -15,14 +15,15 @@ public class BNode<E extends Comparable<E>> {
 
         for (int i = 0; i < n; i++) {
             this.keys.add(null);
-            if(i< n - 1) {
+            if(i < n - 1) {
                 this.childs.add(null);
             }
         }
     }
 
-    public boolean nodeFull() {
-        return count == keys.size(); // propuestas
+    public boolean nodeFull(int maxKeys) {
+//        return count == keys.size(); // propuestas
+        return count >= maxKeys;
     }
 
     public boolean nodeEmpty() {
@@ -30,16 +31,25 @@ public class BNode<E extends Comparable<E>> {
     }
 
     public boolean searchNode(E data, int[] pos) {
-        int i = 0;
+       pos[0] = 0;
 
-        while (i < count && data.compareTo(keys.get(i)) > 0) {
-            i++;
-        }
+       while (pos[0] < count && ((Comparable<E>)keys).compareTo(keys.get(pos[0])) > 0) {
+           pos[0]++;
+       }
 
-        pos[0] = i;
+       return pos[0] < count && ((Comparable<E>)keys).compareTo(keys.get(pos[0])) == 0;
 
-        return (i < count && data.compareTo(keys.get(i)) == 0);
     }
-
-
 }
+
+//    public boolean searchNode(E data, int[] pos) {
+//        int i = 0;
+//
+//        while (i < count && data.compareTo(keys.get(i)) > 0) {
+//            i++;
+//        }
+//
+//        pos[0] = i;
+//
+//        return (i < count && data.compareTo(keys.get(i)) == 0);
+//    }
