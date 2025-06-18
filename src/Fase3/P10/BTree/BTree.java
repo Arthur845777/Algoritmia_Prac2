@@ -5,7 +5,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,10 +14,10 @@ import Fase3.P10.BNode.BNode;
 
 public class BTree<E extends Comparable<E>> {
     private BNode<E> root;
-    private int order;
+    private int order; // num maximo de hijos
     private boolean up;
     private boolean down; // esto tambien lo vamos a necesitar para borrar
-    private BNode<E> nDes;
+    private BNode<E> nDes; // nood descendiente
 
     public BTree(int orden) {
         this.order = orden;
@@ -80,7 +79,8 @@ public class BTree<E extends Comparable<E>> {
         }
     }
 
-    private void putNode(BNode<E> current, E cl, BNode<E> rd, int k) {
+    // desplaza nomas, ose actualiza las posiciones
+    private void putNode(BNode<E> current, E clave, BNode<E> rd, int k) {
         int i;
 
         for (i = current.count - 1; i >= k; i--) {
@@ -90,21 +90,21 @@ public class BTree<E extends Comparable<E>> {
         }
 
 
-        current.keys.set(k, cl);
+        current.keys.set(k, clave);
         current.childs.set(k + 1, rd);
         current.count++;
     }
 
-    private E dividedNode(BNode<E> current, E cl, int k) {
+    private E dividedNode(BNode<E> current, E clave, int position) {
         BNode<E> rd = nDes;
         int i, posMdna;
 
-        // Calcular posición de la mediana
-        posMdna = (k <= this.order / 2) ? this.order / 2 : this.order / 2 + 1;
+        // pos new mediana
+        posMdna = (position <= this.order / 2) ? this.order / 2 : this.order / 2 + 1;
         nDes = new BNode<E>(this.order);
 
-        // Mover claves y hijos al nuevo nodo
-        for (i = posMdna; i < this.order - 1; i++) {
+        //  claves e hijos - mover nodo
+        for (i = posMdna; i < this.order - 1; i++) {  // va de la mitad hacia adelante
             nDes.keys.set(i - posMdna, current.keys.get(i));
             nDes.childs.set(i - posMdna + 1, current.childs.get(i + 1));
         }
@@ -112,14 +112,14 @@ public class BTree<E extends Comparable<E>> {
         nDes.count = (this.order - 1) - posMdna;
         current.count = posMdna;
 
-        // Insertar el nuevo elemento en el nodo correspondiente
-        if (k <= this.order / 2) {
-            putNode(current, cl, rd, k);
+        // meto el nodo :/
+        if (position <= this.order / 2) {
+            putNode(current, clave, rd, position); // 1ra mitad
         } else {
-            putNode(nDes, cl, rd, k - posMdna);
+            putNode(nDes, clave, rd, position - posMdna); // 2da mitad
         }
 
-        // Obtener la mediana que subirá
+        // mediana q sube p
         E median = current.keys.get(current.count - 1);
         nDes.childs.set(0, current.childs.get(current.count));
         current.count--;
@@ -143,6 +143,7 @@ public class BTree<E extends Comparable<E>> {
             return true;
         }
 
+        // comprobamos si - la pos es valida / existe un hijo en esa pos
         if (pos[0] < current.childs.size() && current.childs.get(pos[0]) != null) {
             return searchRecursive(current.childs.get(pos[0]), data);
         }
@@ -167,16 +168,16 @@ public class BTree<E extends Comparable<E>> {
         boolean found = node.searchNode(key, pos);
 
         if (found) {
-            if (node.childs.get(pos[0]) != null) {
-                removeKey(node, pos[0]);
+            if (node.childs.get(pos[0]) == null) { // hijo izquiero, tiene o no?
+                removeKey(node, pos[0]); // tiene entra
                 return true;
-            } else {
+            } else { // tiene izq
                 E pred = getPredecessor(node, pos[0]);
                 node.keys.set(pos[0], pred);
                 return delete(node.childs.get(pos[0]), pred);
             }
         } else {
-            if (node.childs.get(pos[0]) != null) {
+            if (node.childs.get(pos[0]) == null) {
                 return false;
             } else {
                 boolean isDeleted = delete(node.childs.get(pos[0]), key);
@@ -186,6 +187,8 @@ public class BTree<E extends Comparable<E>> {
                 return isDeleted;
             }
         }
+
+
     }
 
     private void removeKey(BNode<E> node, int index) {
@@ -202,6 +205,24 @@ public class BTree<E extends Comparable<E>> {
             current = current.childs.get(index + 1);
         }
         return current.keys.get(current.count - 1);
+    }
+
+    private void fix(BNode<E> parent, int index) {
+        if (index > 0 && parent.childs.get(index - 1).count > (order - 1) / 2) {
+            borrowFromLeft(parent, index);
+        }
+
+        else if (index < parent.count && parent.childs.get(index + 1).count > (order - 1) / 2) {
+            borrowFromRight(parent, index);
+        }
+
+        else {
+            if (index > 0) {
+                merge(parent, index - 1);
+            } else {
+                merge(parent, index);
+            }
+        }
     }
 
     private void merge(BNode<E> parent, int index) {
@@ -287,25 +308,6 @@ public class BTree<E extends Comparable<E>> {
 
         current.count++;
         right.count--;
-    }
-
-    private void fix(BNode<E> parent, int index) {
-        if (index > 0 && parent.childs.get(index - 1).count > (order - 1) / 2) {
-            borrowFromLeft(parent, index);
-        }
-
-        else if (index < parent.count && parent.childs.get(index + 1).count > (order - 1) / 2) {
-            borrowFromRight(parent, index);
-        }
-
-        else {
-            if (index > 0) {
-                merge(parent, index - 1);
-            } else {
-                merge(parent, index);
-            }
-        }
-
     }
 
     public String toString() {
