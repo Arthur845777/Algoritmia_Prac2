@@ -1,5 +1,16 @@
 package Fase3.P10.BTree;
 
+//-----------------JOSE----------------------
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+//-----------------JOSE----------------------
+
 import Fase3.P10.BNode.BNode;
 
 public class BTree<E extends Comparable<E>> {
@@ -350,6 +361,138 @@ public class BTree<E extends Comparable<E>> {
         return s;
     }
 
+    //    ------------------PARTE DE JOSE--------------------------------
+    //Ejercicio 3 :v
+    // Clase auxiliar que representa la información de cada nodo leída desde el archivo
+    class NodoArchivo<E extends Comparable<E>> {
+        int nivel;                // Nivel del nodo en el árbol (0 = raíz)
+        int id;                   // Identificador único del nodo
+        ArrayList<E> claves;      // Lista de claves del nodo
+
+        // Constructor que inicializa los atributos del nodo
+        NodoArchivo(int nivel, int id, ArrayList<E> claves) {
+            this.nivel = nivel;
+            this.id = id;
+            this.claves = claves;
+        }
+    }
+
+    // Clase de excepción personalizada para indicar errores durante la construcción del árbol
+    public static class ItemNoFound extends Exception {
+        public ItemNoFound(String message) {
+            super(message);
+        }
+    }
+
+    // Método principal para construir el árbol B desde un archivo
+    public void building_BTree(String filename) throws Exception {
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+            // Leer la primera línea: indica el orden del árbol
+            String linea = br.readLine();
+            if (linea == null) throw new Exception("Archivo vacío");
+
+            // Establecer el orden del árbol (t) leído desde la primera línea
+            this.order = Integer.parseInt(linea.trim());
+
+            // Mapa para enlazar cada id con su nodo real (BNode)
+            Map<Integer, BNode<E>> mapaNodos = new HashMap<>();
+
+            // Lista temporal para guardar los nodos leídos del archivo antes de enlazarlos
+            List<NodoArchivo<E>> nodosArchivo = new ArrayList<>();
+
+            // Leer el resto de líneas del archivo
+            while ((linea = br.readLine()) != null) {
+                // Separar los valores por coma: nivel, id, claves
+                String[] partes = linea.trim().split(",");
+
+                // Parsear el nivel y el id del nodo
+                int nivel = Integer.parseInt(partes[0].trim());
+                int id = Integer.parseInt(partes[1].trim());
+
+                // Crear lista de claves del nodo
+                ArrayList<E> claves = new ArrayList<>();
+                for (int i = 2; i < partes.length; i++) {
+                    claves.add((E) (Comparable) Integer.parseInt(partes[i].trim()));
+                }
+
+                // Agregar el nodo leído a la lista
+                nodosArchivo.add(new NodoArchivo<>(nivel, id, claves));
+            }
+
+            // Ordenar los nodos por nivel (del más alto al más bajo)
+            // nodosArchivo.sort(Comparator.comparingInt(n -> n.nivel));
+
+            // Determinar el nivel más profundo del árbol
+            int nivelMax = nodosArchivo.get(nodosArchivo.size() - 1).nivel;
+
+            // Crear nodos reales del árbol B (BNode) sin hijos todavía
+            for (NodoArchivo<E> nodoData : nodosArchivo) {
+                // Crear nodo B con el orden definido
+                BNode<E> nodo = new BNode<>(this.order);
+
+                // Asignar claves al nodo
+                for (int i = 0; i < nodoData.claves.size(); i++) {
+                    nodo.keys.set(i, nodoData.claves.get(i));
+                }
+
+                // Establecer el número de claves
+                nodo.count = nodoData.claves.size();
+
+                // Mapear el id del nodo con su objeto BNode
+                mapaNodos.put(nodoData.id, nodo);
+            }
+
+            // Agrupar los nodos por nivel en un mapa: nivel → lista de nodos
+            Map<Integer, List<NodoArchivo<E>>> nodosPorNivel = new HashMap<>();
+            for (NodoArchivo<E> nodo : nodosArchivo) {
+                nodosPorNivel.computeIfAbsent(nodo.nivel, k -> new ArrayList<>()).add(nodo);
+            }
+
+            // Enlazar los nodos padre con sus hijos (de nivel en nivel)
+            for (int nivel = 0; nivel < nivelMax; nivel++) {
+                // Obtener los nodos del nivel actual (padres)
+                List<NodoArchivo<E>> padres = nodosPorNivel.get(nivel);
+
+                // Obtener los nodos del siguiente nivel (hijos)
+                List<NodoArchivo<E>> hijos = nodosPorNivel.get(nivel + 1);
+
+                int indexHijo = 0; // Índice para recorrer la lista de hijos
+
+                // Para cada padre, enlazar con la cantidad correcta de hijos (claves + 1)
+                for (NodoArchivo<E> padre : padres) {
+                    BNode<E> nodoPadre = mapaNodos.get(padre.id);
+                    int hijosEsperados = padre.claves.size() + 1;
+
+                    for (int i = 0; i < hijosEsperados; i++) {
+                        if (indexHijo >= hijos.size()) {
+                            // Error si ya no hay más hijos disponibles
+                            throw new ItemNoFound("No se pudo enlazar hijo para el nodo " + padre.id);
+                        }
+
+                        // Obtener el nodo hijo y asignarlo al padre en la posición correspondiente
+                        BNode<E> nodoHijo = mapaNodos.get(hijos.get(indexHijo).id);
+                        nodoPadre.childs.set(i, nodoHijo);
+                        indexHijo++;
+                    }
+                }
+            }
+
+            // Buscar el nodo raíz (el único que está en el nivel 0) y asignarlo al árbol
+            for (NodoArchivo<E> nodoData : nodosArchivo) {
+                if (nodoData.nivel == 0) {
+                    this.root = mapaNodos.get(nodoData.id);
+                    return;
+                }
+            }
+
+            // Si no se encontró la raíz, lanzar error
+            throw new ItemNoFound("No se encontró la raíz del árbol");
+
+        } catch (IOException e) {
+            // Error si hubo problemas al leer el archivo
+            throw new RuntimeException("Error al leer el archivo: " + e.getMessage());
+        }
+    }
 }
 
 ////    ---------------------------Borrow------------------------------------
