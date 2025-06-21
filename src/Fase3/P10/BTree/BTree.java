@@ -35,20 +35,20 @@ public class BTree<E extends Comparable<E>> {
         return this.order;
     }
 
-        public void insert(E cl) {
-            up = false;
-            E mediana;
-            BNode<E> pnew;
-            mediana = push(this.root, cl);
-            if (up) {
-                pnew = new BNode<E>(this.order); // nodo padre especial -> root
-                pnew.count = 1;
-                pnew.keys.set(0, mediana);
-                pnew.childs.set(0, this.root);
-                pnew.childs.set(1, nDes);
-                this.root = pnew;
-            }
+    public void insert(E cl) {
+        up = false;
+        E mediana;
+        BNode<E> pnew;
+        mediana = push(this.root, cl);
+        if (up) {
+            pnew = new BNode<E>(this.order); // nodo padre especial -> root
+            pnew.count = 1;
+            pnew.keys.set(0, mediana);
+            pnew.childs.set(0, this.root);
+            pnew.childs.set(1, nDes);
+            this.root = pnew;
         }
+    }
 
     private E push(BNode<E> current, E cl) {
         int pos[] = new int[1];
@@ -145,6 +145,11 @@ public class BTree<E extends Comparable<E>> {
             return searchRecursive(current.childs.get(pos[0]), data);
         }
         return false;
+    }
+
+    //    ---------------------------GET------------------------------------
+    public BNode<E> getRoot() {
+        return this.root;
     }
 
     //    ---------------------------Delete------------------------------------
@@ -348,16 +353,13 @@ public class BTree<E extends Comparable<E>> {
         return s;
     }
 
-
     //    ------------------PARTE DE JOSE--------------------------------
-    //Ejercicio 3 :v
-    // Clase auxiliar que representa la información de cada nodo leída desde el archivo
-    class NodoArchivo<E extends Comparable<E>> {
-        int nivel;                // Nivel del nodo en el árbol (0 = raíz)
-        int id;                   // Identificador único del nodo
-        ArrayList<E> claves;      // Lista de claves del nodo
 
-        // Constructor que inicializa los atributos del nodo
+    class NodoArchivo<E extends Comparable<E>> {
+        int nivel;
+        int id;
+        ArrayList<E> claves;
+
         NodoArchivo(int nivel, int id, ArrayList<E> claves) {
             this.nivel = nivel;
             this.id = id;
@@ -365,99 +367,72 @@ public class BTree<E extends Comparable<E>> {
         }
     }
 
-    // Clase de excepción personalizada para indicar errores durante la construcción del árbol
     public static class ItemNoFound extends Exception {
         public ItemNoFound(String message) {
             super(message);
         }
     }
 
-    // Método principal para construir el árbol B desde un archivo
     public void building_BTree(String filename) throws Exception {
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
-            // Leer la primera línea: indica el orden del árbol
             String linea = br.readLine();
             if (linea == null) throw new Exception("Archivo vacío");
 
-            // Establecer el orden del árbol (t) leído desde la primera línea
             this.order = Integer.parseInt(linea.trim());
 
-            // Mapa para enlazar cada id con su nodo real (BNode)
             Map<Integer, BNode<E>> mapaNodos = new HashMap<>();
 
-            // Lista temporal para guardar los nodos leídos del archivo antes de enlazarlos
             List<NodoArchivo<E>> nodosArchivo = new ArrayList<>();
 
-            // Leer el resto de líneas del archivo
             while ((linea = br.readLine()) != null) {
-                // Separar los valores por coma: nivel, id, claves
                 String[] partes = linea.trim().split(",");
 
-                // Parsear el nivel y el id del nodo
                 int nivel = Integer.parseInt(partes[0].trim());
                 int id = Integer.parseInt(partes[1].trim());
 
-                // Crear lista de claves del nodo
                 ArrayList<E> claves = new ArrayList<>();
                 for (int i = 2; i < partes.length; i++) {
                     claves.add((E) (Comparable) Integer.parseInt(partes[i].trim()));
                 }
 
-                // Agregar el nodo leído a la lista
                 nodosArchivo.add(new NodoArchivo<>(nivel, id, claves));
             }
 
-            // Ordenar los nodos por nivel (del más alto al más bajo)
-            // nodosArchivo.sort(Comparator.comparingInt(n -> n.nivel));
-
-            // Determinar el nivel más profundo del árbol
             int nivelMax = nodosArchivo.get(nodosArchivo.size() - 1).nivel;
 
-            // Crear nodos reales del árbol B (BNode) sin hijos todavía
             for (NodoArchivo<E> nodoData : nodosArchivo) {
-                // Crear nodo B con el orden definido
                 BNode<E> nodo = new BNode<>(this.order);
 
-                // Asignar claves al nodo
                 for (int i = 0; i < nodoData.claves.size(); i++) {
                     nodo.keys.set(i, nodoData.claves.get(i));
                 }
 
-                // Establecer el número de claves
                 nodo.count = nodoData.claves.size();
 
-                // Mapear el id del nodo con su objeto BNode
                 mapaNodos.put(nodoData.id, nodo);
             }
 
-            // Agrupar los nodos por nivel en un mapa: nivel → lista de nodos
             Map<Integer, List<NodoArchivo<E>>> nodosPorNivel = new HashMap<>();
             for (NodoArchivo<E> nodo : nodosArchivo) {
                 nodosPorNivel.computeIfAbsent(nodo.nivel, k -> new ArrayList<>()).add(nodo);
             }
 
-            // Enlazar los nodos padre con sus hijos (de nivel en nivel)
             for (int nivel = 0; nivel < nivelMax; nivel++) {
-                // Obtener los nodos del nivel actual (padres)
                 List<NodoArchivo<E>> padres = nodosPorNivel.get(nivel);
 
-                // Obtener los nodos del siguiente nivel (hijos)
                 List<NodoArchivo<E>> hijos = nodosPorNivel.get(nivel + 1);
 
                 int indexHijo = 0; // Índice para recorrer la lista de hijos
 
-                // Para cada padre, enlazar con la cantidad correcta de hijos (claves + 1)
                 for (NodoArchivo<E> padre : padres) {
                     BNode<E> nodoPadre = mapaNodos.get(padre.id);
                     int hijosEsperados = padre.claves.size() + 1;
 
                     for (int i = 0; i < hijosEsperados; i++) {
                         if (indexHijo >= hijos.size()) {
-                            // Error si ya no hay más hijos disponibles
                             throw new ItemNoFound("No se pudo enlazar hijo para el nodo " + padre.id);
                         }
 
-                        // Obtener el nodo hijo y asignarlo al padre en la posición correspondiente
                         BNode<E> nodoHijo = mapaNodos.get(hijos.get(indexHijo).id);
                         nodoPadre.childs.set(i, nodoHijo);
                         indexHijo++;
@@ -465,7 +440,6 @@ public class BTree<E extends Comparable<E>> {
                 }
             }
 
-            // Buscar el nodo raíz (el único que está en el nivel 0) y asignarlo al árbol
             for (NodoArchivo<E> nodoData : nodosArchivo) {
                 if (nodoData.nivel == 0) {
                     this.root = mapaNodos.get(nodoData.id);
@@ -473,172 +447,10 @@ public class BTree<E extends Comparable<E>> {
                 }
             }
 
-            // Si no se encontró la raíz, lanzar error
             throw new ItemNoFound("No se encontró la raíz del árbol");
 
         } catch (IOException e) {
-            // Error si hubo problemas al leer el archivo
             throw new RuntimeException("Error al leer el archivo: " + e.getMessage());
         }
     }
 }
-
-////    ---------------------------Borrow------------------------------------
-//
-//
-//private void redistributeFromLeft(BNode<E> parent, int childIdx) {
-//    BNode<E> left = parent.childs.get(childIdx - 1);
-//    BNode<E> current = parent.childs.get(childIdx);
-//
-//    // Desplazar claves e hijos del niño a la derecha
-//    for (int i = current.count; i >= 0; i--) {
-//        current.keys.set(i, current.keys.get(i - 1));
-//    }
-//    for (int i = current.count + 1; i > 0; i--) {
-//        current.childs.set(i, current.childs.get(i - 1));
-//    }
-//
-//    // Mover clave del padre al niño
-//    current.keys.set(0, parent.keys.get(childIdx - 1));
-//    current.count++;
-//
-//    // Mover clave del hermano al padre
-//    parent.keys.set(childIdx - 1, left.keys.get(left.count - 1));
-//
-//    // Mover hijo del hermano al niño
-//    if (left.childs.get(left.count) != null) {
-//        current.childs.set(0, left.childs.get(left.count));
-//    }
-//
-//    left.count--;
-//}
-//
-//private void redistributeFromRight(BNode<E> parent, int childIdx) {
-//    BNode<E> child = parent.childs.get(childIdx);
-//    BNode<E> rightSibling = parent.childs.get(childIdx + 1);
-//
-//    // Mover clave del padre al niño
-//    child.keys.set(child.count, parent.keys.get(childIdx));
-//    child.count++;
-//
-//    // Mover clave del hermano al padre
-//    parent.keys.set(childIdx, rightSibling.keys.get(0));
-//
-//    // Mover hijo del hermano al niño
-//    if (rightSibling.childs.get(0) != null) {
-//        child.childs.set(child.count, rightSibling.childs.get(0));
-//    }
-//
-//    // Desplazar claves e hijos del hermano a la izquierda
-//    for (int i = 0; i < rightSibling.count - 1; i++) {
-//        rightSibling.keys.set(i, rightSibling.keys.get(i + 1));
-//    }
-//    for (int i = 0; i < rightSibling.count; i++) {
-//        rightSibling.childs.set(i, rightSibling.childs.get(i + 1));
-//    }
-//
-//    rightSibling.count--;
-//}
-//
-////    ---------------------------Merge------------------------------------
-//
-//private void mergeNodes(BNode<E> parent, int idx) {
-//    BNode<E> leftChild = parent.childs.get(idx);
-//    BNode<E> rightChild = parent.childs.get(idx + 1);
-//
-//    // Mover clave del padre al hijo izquierdo
-//    leftChild.keys.set(leftChild.count, parent.keys.get(idx));
-//    leftChild.count++;
-//
-//    // Mover claves e hijos del hijo derecho al izquierdo
-//    for (int i = 0; i < rightChild.count; i++) {
-//        leftChild.keys.set(leftChild.count + i, rightChild.keys.get(i));
-//    }
-//    for (int i = 0; i <= rightChild.count; i++) {
-//        leftChild.childs.set(leftChild.count + i, rightChild.childs.get(i));
-//    }
-//    leftChild.count += rightChild.count;
-//
-//    // Eliminar la clave del padre y el hijo derecho
-//    for (int i = idx; i < parent.count - 1; i++) {
-//        parent.keys.set(i, parent.keys.get(i + 1));
-//    }
-//    for (int i = idx + 1; i < parent.count; i++) {
-//        parent.childs.set(i, parent.childs.get(i + 1));
-//    }
-//    parent.count--;
-//
-//    // Si el padre es la raíz y quedó vacío
-//    if (parent == root && parent.count == 0) {
-//        root = leftChild;
-//    }
-//}
-//
-////    ---------------------------To String------------------------------------
-
-
-
-
-
-
-
-//-------------------------------------- Metodo imprimir
-//    public String toString() {
-//        String s = "";
-//        if (isEmpty()) {
-//            s += "BTree is empty...";
-//        } else {
-//            s = writeTree(this.root);
-//        }
-//        return s;
-//    }
-//
-//    private String writeTree(BNode<E> current) {
-//        StringBuilder sb = new StringBuilder();
-//        sb.append(String.format("%-10s %-20s %-10s %-10s\n", "Id.Nodo", "Claves Nodo", "Id.Padre", "Id.Hijos"));
-//        sb.append(recorrerYFormatear(current, null));
-//        return sb.toString();
-//    }
-//
-//    private String recorrerYFormatear(BNode<E> nodo, BNode<E> padre) {
-//        if (nodo == null) return "";
-//
-//        StringBuilder sb = new StringBuilder();
-//
-//        // Id del nodo
-//        String idNodo = String.valueOf(nodo.idNode);
-//
-//        // Claves del nodo
-//        String claves = "(";
-//        for (int i = 0; i < nodo.count; i++) {
-//            claves += nodo.keys.get(i);
-//            if (i < nodo.count - 1) claves += ", ";
-//        }
-//        claves += ")";
-//
-//        // Id del padre
-//        String idPadre = (padre == null) ? "--" : "[" + padre.idNode + "]";
-//
-//        // Ids de los hijos
-//        StringBuilder hijos = new StringBuilder();
-//        boolean tieneHijos = false;
-//        for (int i = 0; i <= nodo.count; i++) {
-//            if (nodo.childs.get(i) != null) {
-//                if (tieneHijos) hijos.append(", ");
-//                hijos.append(nodo.childs.get(i).idNode);
-//                tieneHijos = true;
-//            }
-//        }
-//        String idHijos = tieneHijos ? "[" + hijos.toString() + "]" : "--";
-//
-//        sb.append(String.format("%-10s %-20s %-10s %-10s\n", idNodo, claves, idPadre, idHijos));
-//
-//        // Recorrer hijos
-//        for (int i = 0; i <= nodo.count; i++) {
-//            if (nodo.childs.get(i) != null) {
-//                sb.append(recorrerYFormatear(nodo.childs.get(i), nodo));
-//            }
-//        }
-//
-//        return sb.toString();
-//    }
