@@ -1,10 +1,10 @@
 package Fase3.P11.HashingCerrado;
 
-public class Register {
+public class Register<E>{
 	private int key;
-	private String name;
+	private E name;
 
-	public Register(int key, String name) {
+	public Register(int key, E name) {
 		super();
 		this.key = key;
 		this.name = name;
@@ -18,11 +18,11 @@ public class Register {
 		this.key = key;
 	}
 
-	public String getName() {
+	public E getName() {
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(E name) {
 		this.name = name;
 	}
 
@@ -30,5 +30,5 @@ public class Register {
 	public String toString() {
 		return "Register [key=" + key + ", name=" + name + "]";
 	}
-	
+
 }
