@@ -1,3 +1,5 @@
+package angel;
+
 import java.util.Random;
 
 class Persona{

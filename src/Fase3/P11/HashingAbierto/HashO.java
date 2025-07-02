@@ -72,7 +72,7 @@ public class HashO {
         int index = hash(reg.getKey());
         LinkedList<Register> list = table[index];
 
-        if (search(reg.getKey()) == null) {
+        if (search(reg.getKey()) != null) {
             return;
         }
 

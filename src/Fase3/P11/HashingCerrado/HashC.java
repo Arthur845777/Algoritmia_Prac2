@@ -91,7 +91,7 @@ public class HashC<E> {
             }
 
             index = (index + 1) % size; // hash(index + 1)
-
+// linearprobbing
         } while (index != originalIndex);
 
         System.out.println("Error: tabla hash llena.");
@@ -102,7 +102,7 @@ public class HashC<E> {
         int originalIndex = index;
 
         do {
-            if (table[index] == null) {
+            if (table[index].state == 0) {
                 return null;
             }
 
@@ -122,7 +122,7 @@ public class HashC<E> {
         int originalIndex = index;
 
         do {
-            if (table[index] == null) {
+            if (table[index].state == 0) {
                 return;
             }
 

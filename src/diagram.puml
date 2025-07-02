@@ -1,0 +1,82 @@
+@startuml
+left to right direction
+!define ENTITY class
+!define PK <<PK>>
+!define FK <<FK>>
+
+ENTITY usuarios {
+  + idu : integer PK
+  --
+  nivel : integer
+  usuario : varchar(50)
+  correo : text
+  password : varchar(15)
+  nombre : text
+  tipo : varchar(40)
+  avatar : ole_object
+}
+
+ENTITY configuracion {
+  + idco : integer PK
+  --
+  nombre : varchar(50)
+  valor : varchar(50)
+  + idu : integer FK
+}
+
+ENTITY grupos {
+  + idg : integer PK
+  --
+  nombre : varchar(40)
+  tipo : varchar(50)
+  + idu : integer FK
+}
+
+ENTITY mensajes {
+  + idm : integer PK
+  --
+  + idu : integer FK
+  + idg : integer FK
+  titulo : varchar(50)
+  mensaje : text
+  fecha : datetime
+  + idu2 : integer FK
+}
+
+ENTITY calendario {
+  + idc : integer PK
+  --
+  nombre : varchar(50)
+  fecha_ini : datetime
+  fecha_fin : datetime
+  hora_ini : datetime
+  hora_fin : datetime
+  detalles : text
+  tipo : varchar(50)
+  img : ole_object
+  + idu : integer FK
+}
+
+ENTITY calendario_tiene_mensajes {
+  + idc : integer PK
+  + idg : integer PK
+  + idm : integer PK
+  + idu3 : integer PK
+}
+
+configuracion }o--|| usuarios : "realizan"
+calendario }o--|| usuarios : "tienen"
+grupos }o--|| usuarios : "forman"
+mensajes }o--|| usuarios : "envian"
+
+mensajes }o--|| grupos : "tiene"
+
+calendario_tiene_mensajes }o--|| calendario : "tiene"
+
+calendario_tiene_mensajes }o--|| calendario : "idc"
+calendario_tiene_mensajes }o--|| grupos : "idg"
+calendario_tiene_mensajes }o--|| mensajes : "idm"
+calendario_tiene_mensajes }o--|| usuarios : "idu"
+
+
+@enduml
